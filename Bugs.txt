@@ -1,0 +1,22 @@
+Gnomonic Azimuthal is wrong.
+
+Landsat is wrong.
+
+Perspective is wrong.
+
+Robinson projection in proj4 has vertical shift at 40 degrees north and south.
+Inverse of Robinson is wrong.
+
+Transverse Mercator is wrong.
+
+Quartic Authalic different from Geocart.
+
+SimpleConicProjections should be split into multiple classes.
+
+OtherProjections.java: remove?
+
+should
+t = 5. * (lp.y - Tc0)/(Y[i+1] - Tc0);
+be
+t = 5. * (lp.y - Tc0)/(Y[i+4] - Tc0);
+?
