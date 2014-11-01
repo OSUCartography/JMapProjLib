@@ -365,6 +365,7 @@ public class ProjectionFactory {
             register("cass", CassiniProjection.class);
             register("cc", CentralCylindricalProjection.class);
             register("cea", CylindricalEqualAreaProjection.class);
+            register("compmill", CompactMillerCylindricalProjection.class);
 //		register( "chamb", Projection.class);
             register("collg", CollignonProjection.class);
             register("crast", CrasterProjection.class);
