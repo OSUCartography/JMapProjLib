@@ -17,17 +17,17 @@ package com.jhlabs.map.proj;
 
 import java.awt.geom.*;
 
-public class CompactMillerCylindricalProjection extends CylindricalProjection {
+public class CompactMillerProjection extends CylindricalProjection {
     
-    private final double k1 = 0.9902;
-    private final double k2 = 0.1604;
-    private final double k3 = -0.03054;
+    private final static double K1 = 0.9902;
+    private final static double K2 = 0.1604;
+    private final static double K3 = -0.03054;
     
     @Override
-    public Point2D.Double project(double lplam, double lpphi, Point2D.Double out) {
-        final double phi_sq = lpphi * lpphi;
-        out.x = lplam;
-        out.y = lpphi * (k1 + phi_sq * (k2 + k3 * phi_sq));
+    public Point2D.Double project(double lon, double lat, Point2D.Double out) {
+        final double lat_sq = lat * lat;
+        out.x = lon;
+        out.y = lat * (K1 + lat_sq * (K2 + K3 * lat_sq));
         return out;
     }
 
