@@ -8,3 +8,5 @@ A partial Java port of the PROJ.4 map projection library. Most projections are i
 JMapProjLib currently has various [bugs](https://github.com/OSUCartography/JMapProjLib/issues). Please post an [issue](https://github.com/OSUCartography/JMapProjLib/issues) if you find undocumented bugs.
 
 Original port by Jerry Huxtable www.jhlabs.com, now maintained by the [Cartography and Geovisualization Group](http://cartography.oregonstate.edu), Oregon State University.
+
+A Netbeans project is included, but only the demo application in [src/ch/ethz/karto](src/ch/ethz/karto) uses the Netbeans GUI builder. 
