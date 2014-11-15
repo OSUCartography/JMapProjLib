@@ -434,6 +434,7 @@ public class ProjectionFactory {
             register("omerc", ObliqueMercatorProjection.class);
             register("ortel", OrteliusProjection.class);
             register("ortho", OrthographicAzimuthalProjection.class);
+            register("patt", PattersonProjection.class);
             register("pconic", PerspectiveConicProjection.class);
             register("poly", PolyconicProjection.class);
             register("putp1", PutninsP1Projection.class);
