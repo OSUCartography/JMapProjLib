@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 /**
- * Rremoved long unrelated commented method for geometrical path splitting
+ * Removed long unrelated commented method for geometrical path splitting
  * by Bernhard Jenny, May 18 2010.
  */
 package com.jhlabs.map.proj;

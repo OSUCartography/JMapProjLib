@@ -75,6 +75,6 @@ public class PattersonProjection extends CylindricalProjection {
 
     @Override
     public String toString() {
-        return "Patterson Cylindrical";
+        return "Patterson";
     }
 }
