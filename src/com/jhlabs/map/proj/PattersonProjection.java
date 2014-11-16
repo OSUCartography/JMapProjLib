@@ -15,18 +15,18 @@
  */
 package com.jhlabs.map.proj;
 
-import java.awt.geom.*;
+import java.awt.geom.Point2D;
 
 public class PattersonProjection extends CylindricalProjection {
     
-    private final static double k1 = 1.0148;
-    private final static double k2 = 0.23185;
-    private final static double k3 = -0.14499;
-    private final static double k4 = 0.02406;
-    private final static double c1 = k1;
-    private final static double c2 = 5 * k2;
-    private final static double c3 = 7 * k3;
-    private final static double c4 = 9 * k4;
+    private final static double K1 = 1.0148;
+    private final static double K2 = 0.23185;
+    private final static double K3 = -0.14499;
+    private final static double K4 = 0.02406;
+    private final static double C1 = K1;
+    private final static double C2 = 5 * K2;
+    private final static double C3 = 7 * K3;
+    private final static double C4 = 9 * K4;
     private final static double EPS = 1e-11;
     private final static double MAX_Y = 1.790857183;
     
@@ -34,7 +34,7 @@ public class PattersonProjection extends CylindricalProjection {
     public Point2D.Double project(double lon, double lat, Point2D.Double out) {
         final double lat_sq = lat * lat;
         out.x = lon;
-        out.y = lat * (k1 + lat_sq * lat_sq * (k2 + lat_sq * (k3 + k4 * lat_sq)));
+        out.y = lat * (K1 + lat_sq * lat_sq * (K2 + lat_sq * (K3 + K4 * lat_sq)));
         return out;
     }
 
@@ -58,8 +58,8 @@ public class PattersonProjection extends CylindricalProjection {
         double tol;
         for (;;) { // Newton-Raphson
             double y2 = yc * yc;
-            double f = (yc * (k1 + y2 * y2 * (k2 + y2 * (k3 + k4 * y2)))) - y;
-            double fder = c1 + y2 * y2 * (c2 + y2 * (c3 + c4 * y2));
+            double f = (yc * (K1 + y2 * y2 * (K2 + y2 * (K3 + K4 * y2)))) - y;
+            double fder = C1 + y2 * y2 * (C2 + y2 * (C3 + C4 * y2));
             yc -= tol = f / fder;
             if (Math.abs(tol) < EPS) {
                 break;
