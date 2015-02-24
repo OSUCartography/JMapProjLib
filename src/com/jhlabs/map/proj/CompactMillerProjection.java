@@ -26,7 +26,7 @@ public class CompactMillerProjection extends CylindricalProjection {
     private final static double C2 = 3 * K2;
     private final static double C3 = 5 * K3;
     private final static double EPS = 1e-11;
-    private final static double MAX_Y = 0.6 * Math.PI;
+    private final static double MAX_Y = 0.6000207669862655 * Math.PI;
     
     @Override
     public Point2D.Double project(double lon, double lat, Point2D.Double out) {
