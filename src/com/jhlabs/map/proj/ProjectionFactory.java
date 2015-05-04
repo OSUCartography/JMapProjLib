@@ -57,7 +57,7 @@ public class ProjectionFactory {
 
     private final static double RV6 = .04243827160493827160; /* 55/1296 */
 
-    private static AngleFormat format = new AngleFormat(AngleFormat.ddmmssPattern, true);
+    private static final AngleFormat format = new AngleFormat(AngleFormat.ddmmssPattern, true);
 
     /**
      * Return a projection initialized with a PROJ.4 argument list.
@@ -423,6 +423,7 @@ public class ProjectionFactory {
             register("murd2", Murdoch2Projection.class);
             register("murd3", Murdoch3Projection.class);
             register("natearth", NaturalEarthProjection.class);
+            register("natearth2", NaturalEarth2Projection.class);
             register("nell", NellProjection.class);
             register("nell_h", NellHammerProjection.class);
             register("nicol", NicolosiProjection.class);
