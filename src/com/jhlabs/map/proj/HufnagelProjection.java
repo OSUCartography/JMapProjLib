@@ -42,8 +42,7 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
     private double K2, K, C;
 
     public HufnagelProjection() {
-        //this(0.0, 0.0, Math.PI / 2., 2.0);
-        this(1.0, 0.0001, Math.PI / 2., 2.0);
+        this(0.0, 0.0, Math.PI / 2., 2.0);
     }
 
     public HufnagelProjection(double A, double B, double psiMAX, double aspectRatio) {
