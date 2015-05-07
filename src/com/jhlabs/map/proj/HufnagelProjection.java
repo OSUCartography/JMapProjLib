@@ -50,23 +50,22 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
         this.B = B;
         this.psiMAX = psiMAX;
         this.aspectRatio = aspectRatio;
-        initialize();
+        initializeHufnagel();
     }
 
-    @Override
-    public void initialize() {
+    public void initializeHufnagel() {
         Point2D.Double outPoint = new Point2D.Double();
         double width;
 
         K2 = (4. * Math.PI) / (2. * psiMAX + (1. + A - B / 2.) * Math.sin(2. * psiMAX) + ((A + B) / 2.) * Math.sin(4. * psiMAX) + (B / 2.) * Math.sin(6. * psiMAX));
         K = Math.sqrt(K2);
-        C = 1;
+        C = 1.;
 
         initializeLookUpTables();
 
-        this.project(Math.PI, 0, outPoint);
+        this.project(Math.PI, 0., outPoint);
         width = outPoint.x;
-        this.project(0, Math.PI / 2., outPoint);
+        this.project(0., Math.PI / 2., outPoint);
         C = Math.sqrt(aspectRatio / (width / outPoint.y));
 
         initializeLookUpTables();
@@ -143,7 +142,7 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
 
         if (lpphi != 0.0) {
             psi0 = approximatePsi(lpphi);
-            if (Math.abs(psi0) < Math.PI / 2.) {
+            if (Math.abs(psi0) < Math.PI / 2. - EPS) {
                 do {
                     psi0_x_2 = psi0 * 2.;
 
@@ -176,7 +175,7 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
 
     public void setA(double A) {
         this.A = A;
-        initialize();
+        initializeHufnagel();
     }
 
     public double getB() {
@@ -185,7 +184,7 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
 
     public void setB(double B) {
         this.B = B;
-        initialize();
+        initializeHufnagel();
     }
 
     public double getPsiMAX() {
@@ -194,7 +193,7 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
 
     public void setPsiMAX(double psiMAX) {
         this.psiMAX = psiMAX;
-        initialize();
+        initializeHufnagel();
     }
 
     public double getAspectRatio() {
@@ -203,7 +202,7 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
 
     public void setAspectRatio(double aspectRatio) {
         this.aspectRatio = aspectRatio;
-        initialize();
+        initializeHufnagel();
     }
 
     @Override
