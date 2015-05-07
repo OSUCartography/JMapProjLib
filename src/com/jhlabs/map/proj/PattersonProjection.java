@@ -17,6 +17,15 @@ package com.jhlabs.map.proj;
 
 import java.awt.geom.Point2D;
 
+/**
+ * The Patterson projection was designed by Tom Patterson, US National
+ * Park Service, in 2014, using Flex Projector. The polynomial equations for the
+ * projection were developed by Bojan Savric, Oregon State University, in
+ * collaboration with Tom Patterson and Bernhard Jenny, Oregon State University.
+ *
+ * @author Bojan Savric
+ */
+
 public class PattersonProjection extends CylindricalProjection {
     
     private final static double K1 = 1.0148;

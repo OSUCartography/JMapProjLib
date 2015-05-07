@@ -357,6 +357,7 @@ public class ProjectionFactory {
             register("apian1", Apian1Projection.class);
             register("apian2", Apian2Projection.class);
             register("ardn_cls", ArdenCloseProjection.class);
+            register("aspect", AspectAdaptiveProjection.class);
             register("august", AugustProjection.class);
             register("bacon", BaconProjection.class);
             register("bipc", BipolarProjection.class);
@@ -394,6 +395,7 @@ public class ProjectionFactory {
             register("hammer", HammerProjection.class); // Eckert-Greifendorff is in own class
             register("hatano", HatanoProjection.class);
             register("holzel", HolzelProjection.class);
+            register("hufnagel", HufnagelProjection.class);
 //		register( "imw_p", Projection.class, "Internation Map of the World Polyconic" );
             register("kav1", Kavrayskiy1Projection.class);
             register("kav5", Kavrayskiy5Projection.class);
