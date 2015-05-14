@@ -13,24 +13,22 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-
 package com.jhlabs.map.proj;
 
 import java.awt.geom.Point2D;
 
 /**
  * The Hufnagel projection family was introduced by Herbert Hufnagel in the
- * "Hufnagel, H. 1989. Ein System unecht-zylindrischer Kartennetze für 
- * Erdkarten. Kartographische Nachrichten, 39(3), 89–96." All projections are 
- * equal-area. Some parameter combinations break the projection into pieces. 
- * This is due to the difficulty of finding good initial guesses for the 
- * iterative computation of coordinates. Implementation by Bernhard Jenny and 
- * Bojan Savric, Oregon State University, with a hint by Daniel Strebe, 
+ * "Hufnagel, H. 1989. Ein System unecht-zylindrischer Kartennetze für
+ * Erdkarten. Kartographische Nachrichten, 39(3), 89–96." All projections are
+ * equal-area. Some parameter combinations break the projection into pieces.
+ * This is due to the difficulty of finding good initial guesses for the
+ * iterative computation of coordinates. Implementation by Bernhard Jenny and
+ * Bojan Savric, Oregon State University, with a hint by Daniel Strebe,
  * Mapthematics. Nov 30, 2014.
  *
  * @author Bojan Savric
  */
-
 public class HufnagelProjection extends PseudoCylindricalProjection {
 
     private static final double EPS = 1e-6;
@@ -48,8 +46,12 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
     public HufnagelProjection(double A, double B, double psiMAX, double aspectRatio) {
         this.A = A;
         this.B = B;
-        this.psiMAX = psiMAX;
         this.aspectRatio = aspectRatio;
+        if (psiMAX == 0.0) {
+            this.psiMAX = 1e-6;
+        } else {
+            this.psiMAX = psiMAX;
+        }
         initializeHufnagel();
     }
 
@@ -192,7 +194,11 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
     }
 
     public void setPsiMAX(double psiMAX) {
-        this.psiMAX = psiMAX;
+        if (psiMAX == 0.0) {
+            this.psiMAX = 1e-6;
+        } else {
+            this.psiMAX = psiMAX;
+        }
         initializeHufnagel();
     }
 
