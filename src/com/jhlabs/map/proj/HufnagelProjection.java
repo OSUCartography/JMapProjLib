@@ -69,8 +69,6 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
         width = outPoint.x;
         this.project(0., Math.PI / 2., outPoint);
         C = Math.sqrt(aspectRatio / (width / outPoint.y));
-
-        initializeLookUpTables();
     }
 
     public void initializeLookUpTables() {
