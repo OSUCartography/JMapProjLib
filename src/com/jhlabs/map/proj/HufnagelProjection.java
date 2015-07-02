@@ -138,24 +138,22 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
     private double psiFromPhi(double phi) {
         double psi = approximatePsiFromTable(phi, latLUT);
         int i = 0;
-        if (Math.abs(psi) < Math.PI / 2.) {
-            while (true) {
-                double psi_x_2 = psi * 2.;
-                double deltaPsiNominator = (.25 * K2) * (psi_x_2 + (1. + A - .5 * B)
-                        * Math.sin(psi_x_2) + (0.5 * (A + B)) * Math.sin(2. * psi_x_2)
-                        + (0.5 * B) * Math.sin(3. * psi_x_2)) - Math.PI * Math.sin(phi);
-                if (Math.abs(deltaPsiNominator) < EPS) {
-                    break;
-                }
-                double deltaPsiDenominator = (.5 * K2) * (1. + (1. + A - .5 * B)
-                        * Math.cos(psi_x_2) + (A + B) * Math.cos(2. * psi_x_2)
-                        + (3. * .5 * B) * Math.cos(3. * psi_x_2));
-                double deltaPsi = deltaPsiNominator / deltaPsiDenominator;
-                if (Double.isNaN(deltaPsi) || Double.isInfinite(deltaPsi) || i++ > MAX_ITER) {
-                    return Double.NaN;
-                }
-                psi = psi - deltaPsi;
+        while (true) {
+            double psi_x_2 = psi * 2.;
+            double deltaPsiNominator = (.25 * K2) * (psi_x_2 + (1. + A - .5 * B)
+                    * Math.sin(psi_x_2) + (0.5 * (A + B)) * Math.sin(2. * psi_x_2)
+                    + (0.5 * B) * Math.sin(3. * psi_x_2)) - Math.PI * Math.sin(phi);
+            if (Math.abs(deltaPsiNominator) < EPS) {
+                break;
             }
+            double deltaPsiDenominator = (.5 * K2) * (1. + (1. + A - .5 * B)
+                    * Math.cos(psi_x_2) + (A + B) * Math.cos(2. * psi_x_2)
+                    + (3. * .5 * B) * Math.cos(3. * psi_x_2));
+            double deltaPsi = deltaPsiNominator / deltaPsiDenominator;
+            if (Double.isNaN(deltaPsi) || Double.isInfinite(deltaPsi) || i++ > MAX_ITER) {
+                return Double.NaN;
+            }
+            psi = psi - deltaPsi;
         }
         return psi;
     }
@@ -163,24 +161,22 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
     private double psiFromY(double y) {
         double psi = approximatePsiFromTable(y, yLUT);
         int i = 0;
-        if (Math.abs(psi) < Math.PI / 2.) {
-            while (true) {
-                double cosPsi = Math.cos(psi);
-                double cos2Psi = Math.cos(2 * psi);
-                double cos4Psi = Math.cos(4 * psi);
-                double r = Math.sqrt(1 + A * cos2Psi + B * cos4Psi);
-                double deltaPsiNominator = r * Math.sin(psi) - y;
-                if (Math.abs(deltaPsiNominator) < EPS) {
-                    break;
-                }
-                double deltaPsiDenominator = (cosPsi * (1 - A + 2 * B
-                        + (2 * A - 4 * B) * cos2Psi + 3 * B * cos4Psi)) / r;
-                double deltaPsi = deltaPsiNominator / deltaPsiDenominator;
-                if (Double.isNaN(deltaPsi) || Double.isInfinite(deltaPsi) || i++ > MAX_ITER) {
-                    return Double.NaN;
-                }
-                psi = psi - deltaPsi;
+        while (true) {
+            double cosPsi = Math.cos(psi);
+            double cos2Psi = Math.cos(2 * psi);
+            double cos4Psi = Math.cos(4 * psi);
+            double r = Math.sqrt(1 + A * cos2Psi + B * cos4Psi);
+            double deltaPsiNominator = r * Math.sin(psi) - y;
+            if (Math.abs(deltaPsiNominator) < EPS) {
+                break;
             }
+            double deltaPsiDenominator = (cosPsi * (1 - A + 2 * B
+                    + (2 * A - 4 * B) * cos2Psi + 3 * B * cos4Psi)) / r;
+            double deltaPsi = deltaPsiNominator / deltaPsiDenominator;
+            if (Double.isNaN(deltaPsi) || Double.isInfinite(deltaPsi) || i++ > MAX_ITER) {
+                return Double.NaN;
+            }
+            psi = psi - deltaPsi;
         }
         return psi;
     }
