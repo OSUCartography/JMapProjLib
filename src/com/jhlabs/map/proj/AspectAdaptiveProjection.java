@@ -51,7 +51,7 @@ public class AspectAdaptiveProjection extends CylindricalProjection {
     private static final double B4 = 1.837;
     
     private static final double ASPECT_LIMIT = 0.7;
-    private static final double LAT_LIMIT = Math.PI / 4.0;
+    private static final double LAT_LIMIT = Math.PI / 4.;
 
     private double aspectRatio;
     private double k11, k12, k13, k21, k22;
@@ -66,11 +66,11 @@ public class AspectAdaptiveProjection extends CylindricalProjection {
         double PI_HALF = Math.PI / 2.;
         double PI_HALF_2 = PI_HALF * PI_HALF;
 
-        double k11x, k12x, k13x, n;
+        double k11x, k12x, k13x, k21x, k22x, n, n_2;
 
         if (aspectRatio > ASPECT_LIMIT) {
-            k11x = A1 + ASPECT_LIMIT * (A2 + ASPECT_LIMIT * (A3 + ASPECT_LIMIT * A4));
-            k12x = A5 + ASPECT_LIMIT * (A6 + ASPECT_LIMIT * (A7 + ASPECT_LIMIT * A8));
+            k11x = A1 + ASPECT_LIMIT * (A2  + ASPECT_LIMIT * (A3  + ASPECT_LIMIT * A4));
+            k12x = A5 + ASPECT_LIMIT * (A6  + ASPECT_LIMIT * (A7  + ASPECT_LIMIT * A8));
             k13x = A9 + ASPECT_LIMIT * (A10 + ASPECT_LIMIT * (A11 + ASPECT_LIMIT * A12));
 
             n = PI_HALF * (k11x + PI_HALF_2 * (k12x + PI_HALF_2 * k13x));
@@ -79,22 +79,21 @@ public class AspectAdaptiveProjection extends CylindricalProjection {
             k12 = k12x * ASPECT_LIMIT * Math.PI / n;
             k13 = k13x * ASPECT_LIMIT * Math.PI / n;
 
-            double k21x = B1 + aspectRatio * B2;
-            double k22x = B3 + aspectRatio * B4;
+            k21x = B1 + aspectRatio * B2;
+            k22x = B3 + aspectRatio * B4;
 
-            double poleDiff = PI_HALF - ASPECT_LIMIT;
-            double n_2 = poleDiff * (k21x + poleDiff * poleDiff * k22x);
+            n_2 = LAT_LIMIT * (k21x + LAT_LIMIT * LAT_LIMIT * k22x);
 
             double aspectDiff = aspectRatio - ASPECT_LIMIT;
             k21 = k21x * Math.PI * aspectDiff / n_2;
             k22 = k22x * Math.PI * aspectDiff / n_2;
 
         } else {
-            k11x = A1 + aspectRatio * (A2 + aspectRatio * (A3 + aspectRatio * A4));
-            k12x = A5 + aspectRatio * (A6 + aspectRatio * (A7 + aspectRatio * A8));
+            k11x = A1 + aspectRatio * (A2  + aspectRatio * (A3  + aspectRatio * A4));
+            k12x = A5 + aspectRatio * (A6  + aspectRatio * (A7  + aspectRatio * A8));
             k13x = A9 + aspectRatio * (A10 + aspectRatio * (A11 + aspectRatio * A12));
 
-            n = PI_HALF * (k11x + PI_HALF * PI_HALF * (k12x + PI_HALF * PI_HALF * k13x));
+            n = PI_HALF * (k11x + PI_HALF_2 * (k12x + PI_HALF_2 * k13x));
 
             k11 = k11x * aspectRatio * Math.PI / n;
             k12 = k12x * aspectRatio * Math.PI / n;
@@ -110,16 +109,14 @@ public class AspectAdaptiveProjection extends CylindricalProjection {
     }
 
     public Point2D.Double project(double lon, double lat, Point2D.Double dst) {
-        final double latsq = lat * lat;
-        double lat_diff = 0.0, y;
+		final double lat_abs = Math.abs(lat);
+		final double latsq = lat * lat;
+		double lat_diff = 0.0, y;
 
         y = lat * (k11 + latsq * (k12 + latsq * k13));
-        if (aspectRatio > ASPECT_LIMIT) {
-            if (lat > LAT_LIMIT) {
-                lat_diff = lat - ASPECT_LIMIT;
-            } else if (lat < -LAT_LIMIT) {
-                lat_diff = lat + ASPECT_LIMIT;
-            }
+        
+		if ((aspectRatio > ASPECT_LIMIT) && (lat_abs > LAT_LIMIT)) {
+            lat_diff = Math.signum(lat) * (lat_abs - LAT_LIMIT);
             y += lat_diff * (k21 + lat_diff * lat_diff * k22);
         }
 
