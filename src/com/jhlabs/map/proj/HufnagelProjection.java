@@ -21,13 +21,12 @@ import java.awt.geom.Point2D;
  * The Hufnagel projection family was introduced by Herbert Hufnagel in
  * "Hufnagel, H. 1989. Ein System unecht-zylindrischer Kartennetze für
  * Erdkarten. Kartographische Nachrichten, 39(3), 89–96." All projections are
- * equal-area. Some parameter combinations break the projection into pieces.
- * This is due to the difficulty of finding good initial guesses for the
- * iterative computation of coordinates. Implementation by Bernhard Jenny and
- * Bojan Savric, Oregon State University, with help by Daniel Strebe,
- * Mapthematics. November 2014 to July 2015.
+ * equal-area. Implementation by Bernhard Jenny, Oregon State University, Bojan
+ * Savric, Oregon State University, with substantial contributions by Daniel
+ * "daan" Strebe, Mapthematics. November 2014 to October 2015.
  *
- * @author Bojan Savric, Bernhard Jenny
+ * @author Bojan Savric
+ * @author Bernhard Jenny
  */
 public class HufnagelProjection extends PseudoCylindricalProjection {
 
@@ -55,20 +54,12 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
         if (psiMax == 0) {
             K = Math.sqrt(aspectRatio / Math.PI);
         } else {
-            Point2D.Double outPoint = new Point2D.Double();
-            double width;
-
             K2 = (4. * Math.PI) / (2. * psiMax + (1. + A - B / 2.) * Math.sin(2. * psiMax)
                     + ((A + B) / 2.) * Math.sin(4. * psiMax) + (B / 2.) * Math.sin(6. * psiMax));
             K = Math.sqrt(K2);
-            C = 1.;
-
+            C = Math.sqrt(aspectRatio * Math.sin(psiMax)
+                    * Math.sqrt((1 + A * Math.cos(2 * psiMax) + B * Math.cos(4 * psiMax)) / (1 + A + B)));
             initializeLookUpTables();
-
-            this.project(Math.PI, 0., outPoint);
-            width = outPoint.x;
-            this.project(0., Math.PI / 2., outPoint);
-            C = Math.sqrt(aspectRatio / (width / outPoint.y));
         }
     }
 
