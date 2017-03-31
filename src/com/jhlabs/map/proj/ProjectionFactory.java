@@ -452,6 +452,8 @@ public class ProjectionFactory {
             register("tcea", TCEAProjection.class);
             register("tissot", TissotProjection.class);
             register("tmerc", TransverseMercatorProjection.class);
+            register("tlat", TransformedLambertAzimuthalTransverse.class);
+            
 //		register( "tpeqd", Projection.class, "Two Point Equidistant" );
 //		register( "tpers", Projection.class, "Tilted perspective" );
 //		register( "ups", Projection.class, "Universal Polar Stereographic" );
