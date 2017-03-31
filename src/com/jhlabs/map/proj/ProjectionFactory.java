@@ -380,6 +380,7 @@ public class ProjectionFactory {
             register("fouc_s", FoucautSinusoidalProjection.class);
             register("four2", Fournier2Projection.class);
             register("gall", GallProjection.class);
+            register("gallpeters", GallPetersProjection.class);
             register("gins8", Ginzburg8Projection.class);
 //		register( "gn_sinu", Projection.class);
             register("gnom", GnomonicAzimuthalProjection.class);
