@@ -17,6 +17,7 @@ package com.jhlabs.map.proj;
 
 import com.jhlabs.map.MapMath;
 import java.awt.geom.Point2D;
+import java.time.Year;
 
 /**
  * Bacon Globular projection.
@@ -34,6 +35,7 @@ public class BaconProjection extends Projection {
 	initialize();
     }
 
+    @Override
     public Point2D.Double project(double lplam, double lpphi, Point2D.Double out) {
 
         out.y = MapMath.HALFPI * Math.sin(lpphi);
@@ -62,8 +64,28 @@ public class BaconProjection extends Projection {
         return true;
     }
 
-
+    @Override
     public String toString() {
         return "Bacon Globular";
+    }
+    
+    @Override
+    public Year getYear() {
+        return Year.of(1265);
+    }
+    
+    @Override
+    public String getAuthor() {
+        return "Roger Bacon (1214Ð1294)";
+    }
+    
+    @Override
+    public String getHistoryDescription() {
+        return super.getHistoryDescription() + " Identical to later Glareanus (Heinrich Loriti) projection of 1527.";
+    }
+    
+    @Override
+    public String getDescription() {
+        return super.getDescription() + " Meridians are arcs of circles.";
     }
 }

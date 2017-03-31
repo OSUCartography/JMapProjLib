@@ -8,7 +8,6 @@ package ch.ethz.karto.gui;
 import com.jhlabs.map.Ellipsoid;
 import com.jhlabs.map.proj.Projection;
 import com.jhlabs.map.proj.ProjectionFactory;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,7 +56,7 @@ public class ProjectionSelectionPanel extends javax.swing.JPanel {
                 projection.initialize();
 
                 LineProjector projector = new LineProjector();
-                ArrayList<MapLine> projectedLines = new ArrayList<MapLine>();
+                ArrayList<MapLine> projectedLines = new ArrayList<>();
                 projector.constructGraticule(projectedLines, projection);
                 projector.projectLines(lines, projectedLines, projection);
                 if (inverse && projection.hasInverse()) {
@@ -93,13 +92,13 @@ public class ProjectionSelectionPanel extends javax.swing.JPanel {
         // pass the new lines to the map that displays the lines.
         map.setLines(lines);
 
-        // reset the graphical user interface to the Geographical projection.
+        // reset the graphical user interface to the first projection.
         projectionComboBox.setSelectedIndex(0);
         project();
     }
 
     /**
-     * Write basic infromation about the projection to the graphical user
+     * Write basic information about the projection to the graphical user
      * interface.
      *
      * @projection The Projection that provides the information.
@@ -108,7 +107,7 @@ public class ProjectionSelectionPanel extends javax.swing.JPanel {
         if (projection == null) {
             descriptionLabel.setText("-");
         } else {
-            descriptionLabel.setText(projection.getProjectionDescription());
+            descriptionLabel.setText(projection.getDescription());
         }
     }
 

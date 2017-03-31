@@ -17,9 +17,9 @@ package com.jhlabs.map.proj;
 
 import com.jhlabs.map.MapMath;
 import java.awt.geom.Point2D;
+import java.time.Year;
 
 /**
- * Bacon Globular projection.
  * Code from proj4.
  * @author Bernhard Jenny, Institute of Cartography, ETH Zurich
  */
@@ -68,4 +68,10 @@ public class OrteliusProjection extends Projection {
     public String toString() {
         return "Ortelius Oval";
     }
+    
+    @Override
+    public String getAuthor() {
+        return "Battista Agnese (1514-64) in 1544, Abraham Ortelius (1527-98) in 1570";
+    }
+    
 }

@@ -13,7 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-
 /**
  * This file was semi-automatically converted from the public-domain USGS PROJ source.
  *
@@ -27,11 +26,11 @@ package com.jhlabs.map.proj;
 import com.jhlabs.map.Ellipsoid;
 import com.jhlabs.map.MapMath;
 import java.awt.geom.Point2D;
+import java.time.Year;
 
 /**
  * Transverse Mercator Projection algorithm is taken from the USGS PROJ package.
  */
-
 public class TransverseMercatorProjection extends CylindricalProjection {
 
     private final static double FC1 = 1.0;
@@ -183,7 +182,7 @@ public class TransverseMercatorProjection extends CylindricalProjection {
     public boolean hasInverse() {
         return true;
     }
-    
+
     public boolean isConformal() {
         return true;
     }
@@ -191,8 +190,18 @@ public class TransverseMercatorProjection extends CylindricalProjection {
     public boolean isRectilinear() {
         return false;
     }
-    
+
     public String toString() {
         return "Transverse Mercator";
+    }
+
+    @Override
+    public Year getYear() {
+        return Year.of(1772);
+    }
+    
+    @Override
+    public String getAuthor() {
+        return "Johann Heinrich Lambert (1728Ð1777)";
     }
 }

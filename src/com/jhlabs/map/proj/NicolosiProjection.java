@@ -26,6 +26,7 @@ package com.jhlabs.map.proj;
 
 import com.jhlabs.map.MapMath;
 import java.awt.geom.Point2D;
+import java.time.Year;
 
 public class NicolosiProjection extends Projection {
 
@@ -82,5 +83,15 @@ public class NicolosiProjection extends Projection {
 
     public String toString() {
         return "Nicolosi Globular";
+    }
+    
+    @Override
+    public Year getYear() {
+        return Year.of(1660);
+    }
+    
+    @Override
+    public String getAuthor() {
+        return "Giambattista Nicolosi (1610-1670)";
     }
 }

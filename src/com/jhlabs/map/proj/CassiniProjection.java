@@ -23,6 +23,7 @@ package com.jhlabs.map.proj;
 
 import com.jhlabs.map.MapMath;
 import java.awt.geom.Point2D;
+import java.time.Year;
 
 public class CassiniProjection extends CylindricalProjection {
 
@@ -52,6 +53,7 @@ public class CassiniProjection extends CylindricalProjection {
         initialize();
     }
 
+    @Override
     public Point2D.Double project(double lplam, double lpphi, Point2D.Double xy) {
         if (spherical) {
             xy.x = Math.asin(Math.cos(lpphi) * Math.sin(lplam));
@@ -72,6 +74,7 @@ public class CassiniProjection extends CylindricalProjection {
         return xy;
     }
 
+    @Override
     public Point2D.Double projectInverse(double xyx, double xyy, Point2D.Double out) {
         if (spherical) {
             out.y = Math.asin(Math.sin(dd = xyy + projectionLatitude) * Math.cos(xyx));
@@ -96,6 +99,7 @@ public class CassiniProjection extends CylindricalProjection {
         return out;
     }
 
+    @Override
     public void initialize() {
         super.initialize();
         if (!spherical) {
@@ -106,18 +110,36 @@ public class CassiniProjection extends CylindricalProjection {
         }
     }
 
+    @Override
     public boolean hasInverse() {
         return true;
     }
 
     /**
-     * Returns the ESPG code for this projection, or 0 if unknown.
+     * Returns the ESPG code for this projection.
      */
     public int getEPSGCode() {
         return 9806;
     }
 
+    @Override
     public String toString() {
         return "Cassini";
     }
+    
+    @Override
+    public Year getYear() {
+        return Year.of(1745);
+    }
+    
+    @Override
+    public String getAuthor() {
+        return "César François Cassini de Thury (1714-1784)";
+    }
+    
+    @Override
+    public String getDescription() {
+        return super.getDescription() + "\nTransverse aspect of Plate Carrée.";
+    }
+    
 }

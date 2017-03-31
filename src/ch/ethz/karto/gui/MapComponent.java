@@ -24,9 +24,9 @@ import javax.swing.JComponent;
 public class MapComponent extends JComponent {
 
     /**
-     * A vector that holds all lines.
+     * lines on this map
      */
-    private ArrayList<MapLine> lines = new ArrayList<MapLine>();
+    private ArrayList<MapLine> lines = new ArrayList<>();
     /**
      * The percentage of space that is added around the lines when drawing them.
      */
@@ -94,7 +94,7 @@ public class MapComponent extends JComponent {
         Dimension dim = getSize();
         double horScale = dim.getWidth() / ext.getWidth();
         double verScale = dim.getHeight() / ext.getHeight();
-        double borderScale = 1 / (1 + BORDER_PERCENTAGE * 2 / 100);
+        double borderScale = 1d / (1 + BORDER_PERCENTAGE * 2 / 100d);
         return Math.min(horScale, verScale) * borderScale;
     }
 
@@ -118,7 +118,7 @@ public class MapComponent extends JComponent {
         // enable high quality rendering
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
                 RenderingHints.VALUE_RENDER_QUALITY);
-
+        
         Rectangle2D ext = getMapExtension();
         if (ext == null) {
             return;
@@ -138,8 +138,8 @@ public class MapComponent extends JComponent {
         g2d.translate(-ext.getMinX() + border_x, -ext.getMaxY() - border_y);
 
         // draw lines with a thin black stroke
-        g2d.setStroke(new BasicStroke((float) (1 / scale)));
-        g2d.setColor(Color.black);
+        g2d.setStroke(new BasicStroke((float)(1d/scale), BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND));
+        g2d.setColor(Color.BLACK);
 
         // draw each line
         int nbrLines = lines.size();
@@ -150,15 +150,5 @@ public class MapComponent extends JComponent {
         }
 
         g2d.dispose();
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(200, 200);
-    }
-
-    @Override
-    public Dimension getMinimumSize() {
-        return new Dimension(200, 200);
     }
 }

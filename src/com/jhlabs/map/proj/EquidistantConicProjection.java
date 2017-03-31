@@ -59,6 +59,7 @@ public class EquidistantConicProjection extends ConicProjection {
         //initialize(MapMath.degToRad(0), MapMath.degToRad(37.5), standardLatitude1, standardLatitude2);
     }
 
+    @Override
     public Point2D.Double project(double lplam, double lpphi, Point2D.Double out) {
 
         final double rho = c - lpphi;
@@ -85,6 +86,7 @@ public class EquidistantConicProjection extends ConicProjection {
         return out;
     }*/
  
+    @Override
     public Point2D.Double projectInverse(double x, double y, Point2D.Double dst) {
 
         double rho = Math.hypot(x, y = rho0 - y);
@@ -164,6 +166,7 @@ public class EquidistantConicProjection extends ConicProjection {
     }
     */
 
+    @Override
     public void initialize() {
 
         super.initialize();
@@ -184,11 +187,23 @@ public class EquidistantConicProjection extends ConicProjection {
         rho0 = c - projectionLatitude /*phi0 */;
     }
 
+    @Override
     public boolean hasInverse() {
         return true;
     }
 
+    @Override
     public String toString() {
         return "Equidistant Conic";
+    }
+    
+    @Override
+    public String getAuthor() {
+        return "Claudius Ptolemy about A. D. 100 (rudimentary), improved by Johannes Ruysch in 1506, Gerardus Mercator late 16th century, Nicolas de l'Isle in 1745";
+    }
+    
+    @Override
+    public String getHistoryDescription() {
+        return super.getHistoryDescription() + "\nVariations of standard parallels by Patrick Murdoch (projections I, III) in 1758, Leonhard Euler in 1777.";
     }
 }

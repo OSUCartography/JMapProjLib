@@ -321,14 +321,8 @@ public class ProjectionFactory {
         Class cls = (Class) registry.get(name);
         if (cls != null) {
             try {
-                Projection projection = (Projection) cls.newInstance();
-                if (projection != null) {
-                    projection.setName(name); // is this needed ? FIXME
-                }
-                return projection;
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
+                return (Projection) cls.newInstance();
+            } catch (IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
             }
         }

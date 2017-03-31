@@ -1,17 +1,14 @@
 package com.jhlabs.map.proj;
 
 import java.awt.geom.Point2D;
+import java.time.Year;
 
+public class LambertAzimuthalEqualAreaProjection extends AzimuthalProjection {
 
-public class LambertAzimuthalEqualAreaProjection extends Projection {
-    
-    private static final double FORTPI = Math.PI / 4;
-    private static final double HALFPI = Math.PI / 2;
+    private static final double lat0 = 0;
+    private static final double cosLat0 = 1;
+    private static final double sinLat0 = 0;
 
-    private static final double  lat0 = 0;
-    private static final double  cosLat0 = 1;
-    private static final double  sinLat0 = 0;
-    
     public LambertAzimuthalEqualAreaProjection() {
     }
 
@@ -34,7 +31,7 @@ public class LambertAzimuthalEqualAreaProjection extends Projection {
         y = Math.sqrt(2 / y);
         out.x = y * cosLat * sinLon;
         out.y = y * (cosLat0 * sinLat - sinLat0 * cosLat * cosLon);
-        
+
         return out;
     }
 
@@ -46,10 +43,9 @@ public class LambertAzimuthalEqualAreaProjection extends Projection {
         double phi = rh * .5;
         out.x = Math.atan2(x, -y);
         out.y = HALFPI - 2. * Math.asin(phi);
-        */
-        
+         */
         double dd = x * x + y * y;
-        if(dd > 4) {
+        if (dd > 4) {
             out.x = out.y = Double.NaN;
             return out;
         }
@@ -62,7 +58,7 @@ public class LambertAzimuthalEqualAreaProjection extends Projection {
         x *= sinz * cosLat0;
         y = (cosz - Math.sin(phi) * sinLat0) * rh;
         out.x = (y == 0) ? 0 : Math.atan2(x, y);
-        
+
         return out;
     }
 
@@ -75,9 +71,19 @@ public class LambertAzimuthalEqualAreaProjection extends Projection {
     public String toString() {
         return "Lambert Azimuthal Equal Area";
     }
-    
+
     @Override
     public boolean isEqualArea() {
         return true;
+    }
+
+    @Override
+    public Year getYear() {
+        return Year.of(1772);
+    }
+
+    @Override
+    public String getAuthor() {
+        return "Johann Heinrich Lambert (1728Ð1777)";
     }
 }

@@ -21,20 +21,22 @@ import com.jhlabs.map.MapMath;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
+import java.time.Year;
 
 /**
  * The superclass for all map projections
  *
- * Changes:
- * Added Serializable interface, added abstract keyword, added
- * binarySearchInverse, added transform and inverseTransform with lon/lat
- * as doubles.
- * Bernhard Jenny, 18 May 2010
- * 
- * Made all setters and getters dealing with degrees final and
- * calling the versions using radians. Derived classes now only need to
- * overwrite a single getter or setter (if overwriting is at all necessary).
- * Bernhard Jenny, 25 October 2010
+ * Changes: Added Serializable interface, added abstract keyword, added
+ * binarySearchInverse, added transform and inverseTransform with lon/lat as
+ * doubles. Bernhard Jenny, 18 May 2010
+ *
+ * Made all setters and getters dealing with degrees final and calling the
+ * versions using radians. Derived classes now only need to overwrite a single
+ * getter or setter (if overwriting is at all necessary). Bernhard Jenny, 25
+ * October 2010
+ *
+ * Added getYear(), getAuthor(), getDescription(), getHistory() methods by
+ * Bernhard Jenny, February 2017.
  */
 public abstract class Projection implements Cloneable, Serializable {
 
@@ -43,7 +45,8 @@ public abstract class Projection implements Cloneable, Serializable {
      */
     protected double minLatitude = -Math.PI / 2;
     /**
-     * The minimum longitude of the bounds of this projection. This is relative to the projection centre.
+     * The minimum longitude of the bounds of this projection. This is relative
+     * to the projection centre.
      */
     protected double minLongitude = -Math.PI;
     /**
@@ -51,7 +54,8 @@ public abstract class Projection implements Cloneable, Serializable {
      */
     protected double maxLatitude = Math.PI / 2;
     /**
-     * The maximum longitude of the bounds of this projection. This is relative to the projection centre.
+     * The maximum longitude of the bounds of this projection. This is relative
+     * to the projection centre.
      */
     protected double maxLongitude = Math.PI;
     /**
@@ -62,7 +66,7 @@ public abstract class Projection implements Cloneable, Serializable {
      * The longitude of the centre of projection
      */
     protected double projectionLongitude = 0.0;
-    
+
     /**
      * The projection scale factor
      */
@@ -167,8 +171,8 @@ public abstract class Projection implements Cloneable, Serializable {
      * Project a lon/lat point (in degrees), producing a result in metres.
      * Important: unlike the other variants of transform, this implementation
      * always normalizes the longitude, even if projectionLongitude is 0. This
-     * is useful for projecting line features crossing +/180 degree of longitude.
-     * Bernhard Jenny, May 2010.
+     * is useful for projecting line features crossing +/180 degree of
+     * longitude. Bernhard Jenny, May 2010.
      */
     public final Point2D.Double transform(double lon, double lat, Point2D.Double dst) {
         lon = MapMath.normalizeLongitude(lon * DTR - projectionLongitude);
@@ -196,8 +200,8 @@ public abstract class Projection implements Cloneable, Serializable {
      * Project a lon/lat point (in degrees), producing a result in metres.
      * Important: unlike the other variations of tansform, this implementation
      * always normalizes the longitude, even if projectionLongitude is 0. This
-     * is useful for projecting line features crossing +/180 degree of longitude.
-     * Bernhard Jenny, May 2010.
+     * is useful for projecting line features crossing +/180 degree of
+     * longitude. Bernhard Jenny, May 2010.
      */
     public final Point2D.Double transformRadians(double lon, double lat, Point2D.Double dst) {
         lon = MapMath.normalizeLongitude(lon - projectionLongitude);
@@ -210,6 +214,7 @@ public abstract class Projection implements Cloneable, Serializable {
     /**
      * The method which actually does the projection. This should be overridden
      * for all projections.
+     *
      * @param x Longitude in radians.
      * @param y Latitude in radians.
      * @param dst The projected point.
@@ -222,7 +227,8 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Project a number of lat/long points (in degrees), producing a result in metres
+     * Project a number of lat/long points (in degrees), producing a result in
+     * metres
      */
     public void transform(double[] srcPoints, int srcOffset, double[] dstPoints, int dstOffset, int numPoints) {
         Point2D.Double in = new Point2D.Double();
@@ -237,7 +243,8 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Project a number of lat/long points (in radians), producing a result in metres
+     * Project a number of lat/long points (in radians), producing a result in
+     * metres
      */
     public void transformRadians(double[] srcPoints, int srcOffset, double[] dstPoints, int dstOffset, int numPoints) {
         Point2D.Double in = new Point2D.Double();
@@ -252,7 +259,8 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Inverse-project a point (in metres), producing a lat/long result in degrees
+     * Inverse-project a point (in metres), producing a lat/long result in
+     * degrees
      */
     public Point2D.Double inverseTransform(Point2D.Double src, Point2D.Double dst) {
         double x = (src.x - totalFalseEasting) / totalScale;
@@ -272,7 +280,8 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Inverse-project a point (in metres), producing a lat/long result in radians
+     * Inverse-project a point (in metres), producing a lat/long result in
+     * radians
      */
     public Point2D.Double inverseTransformRadians(Point2D.Double src, Point2D.Double dst) {
         double x = (src.x - totalFalseEasting) / totalScale;
@@ -290,8 +299,8 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Inverse-project a point (in meters), producing a lat/long result in radians.
-     * Added by Bernhard Jenny, May 2007.
+     * Inverse-project a point (in meters), producing a lat/long result in
+     * radians. Added by Bernhard Jenny, May 2007.
      */
     public void inverseTransformRadians(double srcX, double srcY, Point2D.Double dst) {
         double x = (srcX - totalFalseEasting) / totalScale;
@@ -307,9 +316,9 @@ public abstract class Projection implements Cloneable, Serializable {
         }
     }
 
-
     /**
-     * The method which actually does the inverse projection. This should be overridden for all projections.
+     * The method which actually does the inverse projection. This should be
+     * overridden for all projections.
      */
     public Point2D.Double projectInverse(double x, double y, Point2D.Double dst) {
         dst.x = x;
@@ -318,7 +327,8 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Inverse-project a number of points (in metres), producing a lat/long result in degrees
+     * Inverse-project a number of points (in metres), producing a lat/long
+     * result in degrees
      */
     public void inverseTransform(double[] srcPoints, int srcOffset, double[] dstPoints, int dstOffset, int numPoints) {
         Point2D.Double in = new Point2D.Double();
@@ -333,7 +343,8 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Inverse-project a number of points (in metres), producing a lat/long result in radians
+     * Inverse-project a number of points (in metres), producing a lat/long
+     * result in radians
      */
     public void inverseTransformRadians(double[] srcPoints, int srcOffset, double[] dstPoints, int dstOffset, int numPoints) {
         Point2D.Double in = new Point2D.Double();
@@ -348,8 +359,8 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Finds the smallest lat/long rectangle wholly inside the given view rectangle.
-     * This is only a rough estimate.
+     * Finds the smallest lat/long rectangle wholly inside the given view
+     * rectangle. This is only a rough estimate.
      */
     public Rectangle2D inverseTransform(Rectangle2D r) {
         Point2D.Double in = new Point2D.Double();
@@ -389,14 +400,14 @@ public abstract class Projection implements Cloneable, Serializable {
         return bounds;
     }
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         /*Projection p = new OrteliusProjection();
         Ellipsoid unarySphere = new Ellipsoid(null, 1, 0, null);
         p.setEllipsoid(unarySphere);
         p.initialize();
         p.testBinarySearchInverse();
         
-        */
+         */
         Projection p = new RobinsonProjection();
         p.initialize();
         double lon = Math.PI / 2;
@@ -416,7 +427,7 @@ public abstract class Projection implements Cloneable, Serializable {
                     continue;
                 }
                 transform(lon, lat, pt1);
-                binarySearchInverse(pt1.x, pt1.y, 
+                binarySearchInverse(pt1.x, pt1.y,
                         Math.toRadians(0),
                         Math.toRadians(0),
                         pt2);
@@ -431,10 +442,11 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Compute the inverse projection by a binary search.
-     * Use this method carefully! It is slow and only an approximation for
-     * projections that do not provide their own projectInverse method.
-     * Added by Bernhard Jenny, 18 May 2010.
+     * Compute the inverse projection by a binary search. Use this method
+     * carefully! It is slow and only an approximation for projections that do
+     * not provide their own projectInverse method. Added by Bernhard Jenny, 18
+     * May 2010.
+     *
      * @param x The projected x coordinate relative to the unary sphere.
      * @param y The projected y coordinate relative to the unary sphere.
      * @param lp A point that will receive the result.
@@ -444,10 +456,11 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Compute the inverse projection by a binary search.
-     * Use this method carefully! It is slow and only an approximation for
-     * projections that do not provide their own projectInverse method.
-     * Added by Bernhard Jenny, 18 May 2010.
+     * Compute the inverse projection by a binary search. Use this method
+     * carefully! It is slow and only an approximation for projections that do
+     * not provide their own projectInverse method. Added by Bernhard Jenny, 18
+     * May 2010.
+     *
      * @param x The projected x coordinate relative to the unary sphere.
      * @param y The projected y coordinate relative to the unary sphere.
      * @param lon An approximation of the longitude in radians.
@@ -486,7 +499,7 @@ public abstract class Projection implements Cloneable, Serializable {
         lp.x = lon;
         lp.y = lat;
     }
-    
+
     /**
      * Transform a bounding box. This is only a rough estimate.
      */
@@ -530,6 +543,8 @@ public abstract class Projection implements Cloneable, Serializable {
 
     /**
      * Returns true if this projection is conformal
+     *
+     * @return true if this projection is conformal, false otherwise.
      */
     public boolean isConformal() {
         return false;
@@ -537,6 +552,8 @@ public abstract class Projection implements Cloneable, Serializable {
 
     /**
      * Returns true if this projection is equal area
+     *
+     * @return true if this projection is equal area, false otherwise.
      */
     public boolean isEqualArea() {
         return false;
@@ -544,22 +561,28 @@ public abstract class Projection implements Cloneable, Serializable {
 
     /**
      * Returns true if this projection has an inverse
+     *
+     * @return true if an inverse projection is available, false otherwise.
      */
     public boolean hasInverse() {
         return false;
     }
 
     /**
-     * Returns true if lat/long lines form a rectangular grid for this projection.
-     * This is generally only the case for cylindrical projections, but not
-     * for oblique cylindrical projections.
+     * Returns true if lat/long lines form a rectangular grid for this
+     * projection. This is generally only the case for cylindrical projections,
+     * but not for oblique cylindrical projections.
      */
     public boolean isRectilinear() {
         return false;
     }
 
     /**
-     * Returns true if latitude lines are parallel for this projection
+     * Returns true if parallels (lines of constant latitude) are parallel. This
+     * is the case for cylindric, pseudocylindric and some other projections
+     * that use an equatorial aspect.
+     *
+     * @return true if lines of constant latitude are parallel.
      */
     public boolean parallelsAreParallel() {
         return isRectilinear();
@@ -567,8 +590,9 @@ public abstract class Projection implements Cloneable, Serializable {
 
     /**
      * Returns true if the given lat/lon point is visible in this projection.
-     * @param x longitude in degrees.
-     * @param y latitude in degrees.
+     *
+     * @param lon longitude in degrees.
+     * @param lat latitude in degrees.
      * @return
      */
     public boolean inside(double lon, double lat) {
@@ -578,47 +602,106 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Set the name of this projection.
+     * Returns the name of the projection.
+     *
+     * @return the name
      */
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getName() {
-        if (name != null) {
-            return name;
-        }
         return toString();
     }
 
     /**
-     * Returns a human readable description of this projection in telegram style.
-     * @return
+     * Returns year of invention or first use. The year may be approximate for
+     * old projections.
+     *
+     * @return year of invention or first use, or null if not known.
      */
-    public String getProjectionDescription() {
+    public Year getYear() {
+        return null;
+    }
+
+    /**
+     * Returns the name of the author of the projection.
+     *
+     * @return the name
+     */
+    public String getAuthor() {
+        return null;
+    }
+
+    /**
+     * Returns a human readable description of the main characteristics of this
+     * projection in telegram style.
+     *
+     * @return a summary of the main characteristics
+     */
+    public String getDescription() {
         StringBuilder sb = new StringBuilder();
 
         // projection type
         if (this instanceof CylindricalProjection) {
-            sb.append("cylindrical ");
-        }
-        if (this instanceof ConicProjection) {
-            sb.append("conic ");
-        }
-        if (this instanceof PseudoCylindricalProjection) {
-            sb.append("pseudo cylindrical ");
-        }
-        if (this instanceof AzimuthalProjection) {
-            sb.append("azimuthal ");
+            sb.append("Cylindric");
+        } else if (this instanceof ConicProjection) {
+            sb.append("Conic");
+        } else if (this instanceof PseudoCylindricalProjection) {
+            sb.append("Pseudocylindric");
+        } else if (this instanceof AzimuthalProjection) {
+            sb.append("Azimuthal");
+        } else {
+            sb.append("Miscellaneous");
         }
 
         // distortion
-        if (this.isConformal()) {
-            sb.append("conformal");
+        if (isConformal()) {
+            sb.append(", conformal.");
+        } else if (isEqualArea()) {
+            sb.append(", equal-area.");
+        } else {
+            sb.append(", not equal-area, not conformal.");
         }
-        if (this.isEqualArea()) {
-            sb.append("equal-area");
+
+        return sb.toString();
+    }
+
+    /**
+     * Returns short description of the development of this projection,
+     * consisting of the year of invention and author if available, and possibly
+     * related information.
+     *
+     * @return historical summary
+     */
+    public String getHistoryDescription() {
+        StringBuilder sb = new StringBuilder();
+
+        Year year = getYear();
+        String author = getAuthor();
+
+        if (year != null) {
+            if (year.isBefore(Year.of(0))) {
+                sb.append(Math.abs(year.getValue())).append(" B.C.");
+            } else if (year.isBefore(Year.of(1000))) {
+                sb.append("A.D. ").append(year.getValue());
+            } else {
+                sb.append(year);
+            }
         }
+
+        if (author != null) {
+            if (year == null) {
+                sb.append("By ");
+            } else {
+                sb.append(" by ");
+            }
+            sb.append(author);
+        }
+
+        if (sb.length() > 0) {
+            boolean endsWithPeriod = sb.toString().endsWith(".");
+            if (endsWithPeriod == false) {
+                sb.append(".");
+            }
+        }
+
         return sb.toString();
     }
 
@@ -658,7 +741,8 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Set the minimum latitude. This is only used for Shape clipping and doesn't affect projection.
+     * Set the minimum latitude. This is only used for Shape clipping and
+     * doesn't affect projection.
      */
     public void setMinLatitude(double minLatitude) {
         this.minLatitude = minLatitude;
@@ -669,7 +753,8 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Set the maximum latitude. This is only used for Shape clipping and doesn't affect projection.
+     * Set the maximum latitude. This is only used for Shape clipping and
+     * doesn't affect projection.
      */
     public void setMaxLatitude(double maxLatitude) {
         this.maxLatitude = maxLatitude;
@@ -764,7 +849,8 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Set the latitude of true scale in radians. This is only used by certain projections.
+     * Set the latitude of true scale in radians. This is only used by certain
+     * projections.
      */
     public void setTrueScaleLatitude(double trueScaleLatitude) {
         this.trueScaleLatitude = trueScaleLatitude;
@@ -775,7 +861,8 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Set the latitude of true scale in degrees. This is only used by certain projections.
+     * Set the latitude of true scale in degrees. This is only used by certain
+     * projections.
      */
     public final void setTrueScaleLatitudeDegrees(double trueScaleLatitude) {
         setTrueScaleLatitude(DTR * trueScaleLatitude);
@@ -823,7 +910,8 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Set the conversion factor from metres to projected units. This is set to 1 by default.
+     * Set the conversion factor from metres to projected units. This is set to
+     * 1 by default.
      */
     public void setFromMetres(double fromMetres) {
         this.fromMetres = fromMetres;
@@ -852,8 +940,9 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
     /**
-     * Initialize the projection. This should be called after setting parameters and before using the projection.
-     * This is for performance reasons as initialization may be expensive.
+     * Initialize the projection. This should be called after setting parameters
+     * and before using the projection. This is for performance reasons as
+     * initialization may be expensive.
      */
     public void initialize() {
         spherical = e == 0.0;
@@ -865,4 +954,3 @@ public abstract class Projection implements Cloneable, Serializable {
     }
 
 }
-

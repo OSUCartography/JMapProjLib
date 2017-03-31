@@ -26,6 +26,7 @@ package com.jhlabs.map.proj;
 
 import com.jhlabs.map.MapMath;
 import java.awt.geom.Point2D;
+import java.time.Year;
 
 public class EulerProjection extends ConicProjection {
 
@@ -81,5 +82,10 @@ public class EulerProjection extends ConicProjection {
 
     public String toString() {
         return "Euler";
+    }
+    
+    @Override
+    public Year getYear() {
+        return Year.of(1777);
     }
 }

@@ -14,13 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-/*
+ /*
  * This file was semi-automatically converted from the public-domain USGS PROJ source.
  */
 /**
  * Added isEqualArea by Bernhard Jenny, October 28 2008.
  */
-
 package com.jhlabs.map.proj;
 
 import com.jhlabs.map.MapMath;
@@ -54,5 +53,15 @@ public class SinusoidalProjection extends PseudoCylindricalProjection {
 
     public String toString() {
         return "Sinusoidal";
+    }
+    
+    @Override
+    public String getDescription() {
+        return super.getDescription() + " Also called Sanson-Flamsteed.";
+    }
+    
+    @Override
+    public String getHistoryDescription() {
+        return "16th century. Used by Cossin in 1570.";
     }
 }

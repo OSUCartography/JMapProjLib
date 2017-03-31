@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-/*
+ /*
  * This file was semi-automatically converted from the public-domain USGS PROJ source.
  *
  * Bernhard Jenny, 19 September 2010: fixed inverse spherical.
@@ -24,6 +24,7 @@ package com.jhlabs.map.proj;
 
 import com.jhlabs.map.MapMath;
 import java.awt.geom.Point2D;
+import java.time.Year;
 
 public class BonneProjection extends ConicProjection {
 
@@ -33,13 +34,13 @@ public class BonneProjection extends ConicProjection {
     private double m1;
     private double[] en;
 
+    @Override
     public Point2D.Double project(double lon, double lat, Point2D.Double out) {
         if (spherical) {
             final double E, rh;
-                       
+
             // Werner III
             //lon *= Math.PI / 3;
-            
             // modified Werner III
             /*
             final double lonScale;
@@ -50,8 +51,7 @@ public class BonneProjection extends ConicProjection {
                 lonScale = Math.PI / 3;
             }
             lon *= lonScale;
-            */
-            
+             */
             rh = cphi1 + phi1 - lat;
             if (Math.abs(rh) > EPS10) {
                 E = lon * Math.cos(lat) / rh;
@@ -71,6 +71,7 @@ public class BonneProjection extends ConicProjection {
         return out;
     }
 
+    @Override
     public Point2D.Double projectInverse(double xyx, double xyy, Point2D.Double out) {
         if (spherical) {
             double rh;
@@ -103,17 +104,17 @@ public class BonneProjection extends ConicProjection {
         return out;
     }
 
-    /**
-     * Returns true if this projection is equal area
-     */
+    @Override
     public boolean isEqualArea() {
         return true;
     }
 
+    @Override
     public boolean hasInverse() {
         return true;
     }
 
+    @Override
     public void initialize() {
         super.initialize();
 
@@ -138,7 +139,28 @@ public class BonneProjection extends ConicProjection {
         }
     }
 
+    @Override
     public String toString() {
         return "Bonne";
+    }
+
+    @Override
+    public Year getYear() {
+        return Year.of(1511);
+    }
+    
+    @Override
+    public String getDescription() {
+        return super.getDescription() + " Identical to the Werner projection "
+                + "when the standard parallel is at one of the poles.";
+    }
+
+    @Override
+    public String getHistoryDescription() {
+        return super.getHistoryDescription() + " Approximations by Sylvanus (or Sylvano) in"
+                + " 1511 and Honter in 1561. Accurate use by De l'Isle before "
+                + "1700, Coronelli in 1696. Named after Rigobert Bonne (1727-1795). "
+                + "The Werner projection was invented by Johannes Stabius "
+                + "around 1500 and promoted by Johannes Werner (1466Ð1528).";
     }
 }

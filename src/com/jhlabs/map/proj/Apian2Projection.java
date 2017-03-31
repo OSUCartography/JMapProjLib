@@ -16,15 +16,16 @@ limitations under the License.
 package com.jhlabs.map.proj;
 
 import java.awt.geom.Point2D;
+import java.time.Year;
 
 /**
- * Apian II Globular projection.
- * Code from PROJ.4.
- * PROJ.4 lists this as miscellaneous projection, but it is pseudo-cylindrical.
- * 
+ * Apian II Globular projection. Code from PROJ.4. Not a pseudocylindric
+ * projection, because meridians are only regularly distributed along the
+ * equator.
+ *
  * @author Bernhard Jenny, Institute of Cartography, ETH Zurich
  */
-public class Apian2Projection extends PseudoCylindricalProjection {
+public class Apian2Projection extends Projection {
 
     private static final double HLFPI2 = 2.46740110027233965467;
     private static final double RHALFPI = 0.6366197723675813430755350534;
@@ -32,9 +33,10 @@ public class Apian2Projection extends PseudoCylindricalProjection {
     public Apian2Projection() {
     }
 
+    @Override
     public Point2D.Double project(double lplam, double lpphi, Point2D.Double out) {
         out.y = lpphi;
-	out.x = lplam * RHALFPI * Math.sqrt(Math.abs(HLFPI2 - lpphi * lpphi));
+        out.x = lplam * RHALFPI * Math.sqrt(Math.abs(HLFPI2 - lpphi * lpphi));
         return out;
     }
 
@@ -49,7 +51,23 @@ public class Apian2Projection extends PseudoCylindricalProjection {
         return true;
     }
 
+    @Override
     public String toString() {
         return "Apian Globular II";
+    }
+
+    @Override
+    public Year getYear() {
+        return Year.of(1524);
+    }
+
+    @Override
+    public String getAuthor() {
+        return "Peter Apian (Peter Bienewitz) (1495Ð1552)";
+    }
+    
+    @Override
+    public String getDescription() {
+        return super.getDescription() + " Meridians are semiellipses.";
     }
 }

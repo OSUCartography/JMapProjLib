@@ -12,9 +12,9 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-*/
+ */
 
-/*
+ /*
  * This file was semi-automatically converted from the public-domain USGS PROJ source.
  *
  * Bernhard Jenny, 17 September 2010:
@@ -24,66 +24,79 @@ package com.jhlabs.map.proj;
 
 import com.jhlabs.map.MapMath;
 import java.awt.geom.Point2D;
+import java.time.Year;
 
 public class LagrangeProjection extends Projection {
 
-	// Parameters
-	private double hrw;
-	private double rw = 1.4;
-	private double a1;
-	private double phi1;
+    // Parameters
+    private double hrw;
+    private double rw = 1.4;
+    private double a1;
+    private double phi1;
 
-	private final static double TOL = 1e-10;
+    private final static double TOL = 1e-10;
 
-	public Point2D.Double project(double lplam, double lpphi, Point2D.Double xy) {
-		double v, c;
+    public Point2D.Double project(double lplam, double lpphi, Point2D.Double xy) {
+        double v, c;
 
-		if ( Math.abs(Math.abs(lpphi) - MapMath.HALFPI) < TOL) {
-			xy.x = 0;
-			xy.y = lpphi < 0 ? -2. : 2.;
-		} else {
-			lpphi = Math.sin(lpphi);
-			v = a1 * Math.pow((1. + lpphi)/(1. - lpphi), hrw);
-			if ((c = 0.5 * (v + 1./v) + Math.cos(lplam *= rw)) < TOL)
-				throw new ProjectionException();
-			xy.x = 2. * Math.sin(lplam) / c;
-			xy.y = (v - 1./v) / c;
-		}
-		return xy;
-	}
+        if (Math.abs(Math.abs(lpphi) - MapMath.HALFPI) < TOL) {
+            xy.x = 0;
+            xy.y = lpphi < 0 ? -2. : 2.;
+        } else {
+            lpphi = Math.sin(lpphi);
+            v = a1 * Math.pow((1. + lpphi) / (1. - lpphi), hrw);
+            if ((c = 0.5 * (v + 1. / v) + Math.cos(lplam *= rw)) < TOL) {
+                throw new ProjectionException();
+            }
+            xy.x = 2. * Math.sin(lplam) / c;
+            xy.y = (v - 1. / v) / c;
+        }
+        return xy;
+    }
 
-	public void setW( double w ) {
-		this.rw = w;
-	}
-	
-	public double getW() {
-		return rw;
-	}
+    public void setW(double w) {
+        this.rw = w;
+    }
 
-	public void initialize() {
-		super.initialize();
-		if (rw <= 0)
-			throw new ProjectionException("-27");
-		hrw = 0.5 * (rw = 1. / rw);
-		phi1 = 0; // projectionLatitude1; FIXME
-		if (Math.abs(Math.abs(phi1 = Math.sin(phi1)) - 1.) < TOL)
-			throw new ProjectionException("-22");
-		a1 = Math.pow((1. - phi1)/(1. + phi1), hrw);
-	}
+    public double getW() {
+        return rw;
+    }
 
-	/**
-	 * Returns true if this projection is conformal
-	 */
-	public boolean isConformal() {
-		return true;
-	}
-	
-	public boolean hasInverse() {
-		return false;
-	}
+    public void initialize() {
+        super.initialize();
+        if (rw <= 0) {
+            throw new ProjectionException("-27");
+        }
+        hrw = 0.5 * (rw = 1. / rw);
+        phi1 = 0; // projectionLatitude1; FIXME
+        if (Math.abs(Math.abs(phi1 = Math.sin(phi1)) - 1.) < TOL) {
+            throw new ProjectionException("-22");
+        }
+        a1 = Math.pow((1. - phi1) / (1. + phi1), hrw);
+    }
 
-	public String toString() {
-		return "Lagrange";
-	}
+    /**
+     * Returns true if this projection is conformal
+     */
+    public boolean isConformal() {
+        return true;
+    }
 
+    public boolean hasInverse() {
+        return false;
+    }
+
+    public String toString() {
+        return "Lagrange";
+    }
+
+    @Override
+    public Year getYear() {
+        return Year.of(1772);
+    }
+    
+    @Override
+    public String getAuthor() {
+        return "Johann Heinrich Lambert (1728Ð1777) and Joseph Louis Lagrange (1736Ð1813)";
+    }
 }

@@ -14,22 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-/*
+ /*
  * This file was semi-automatically converted from the public-domain USGS PROJ source.
  */
-
 /**
- * Changes by Bernhard Jenny, May 2007: added missing toString() and 
+ * Changes by Bernhard Jenny, May 2007: added missing toString() and
  * isEqualArea(); this class now derives from CylindricalProjection instead of
  * Projection; removed isRectilinear, which is defined in the new superclass
  * CylindricalProjection; and removed trueScaleLatitude that did hide a field
  * of the Projection class of the same name.
  */
-
 package com.jhlabs.map.proj;
 
 import com.jhlabs.map.MapMath;
 import java.awt.geom.Point2D;
+import java.time.Year;
 
 public class CylindricalEqualAreaProjection extends CylindricalProjection {
 
@@ -49,6 +48,7 @@ public class CylindricalEqualAreaProjection extends CylindricalProjection {
         initialize();
     }
 
+    @Override
     public void initialize() {
         super.initialize();
         double t = trueScaleLatitude;
@@ -62,6 +62,7 @@ public class CylindricalEqualAreaProjection extends CylindricalProjection {
         }
     }
 
+    @Override
     public Point2D.Double project(double lam, double phi, Point2D.Double xy) {
         if (spherical) {
             xy.x = scaleFactor * lam;
@@ -73,6 +74,7 @@ public class CylindricalEqualAreaProjection extends CylindricalProjection {
         return xy;
     }
 
+    @Override
     public Point2D.Double projectInverse(double x, double y, Point2D.Double lp) {
         if (spherical) {
             y *= scaleFactor;
@@ -95,16 +97,28 @@ public class CylindricalEqualAreaProjection extends CylindricalProjection {
         return lp;
     }
 
+    @Override
     public boolean hasInverse() {
         return true;
     }
 
+    @Override
     public boolean isEqualArea() {
         return true;
     }
 
+    @Override
     public String toString() {
         return "Cylindrical Equal-Area";
     }
-}
 
+    @Override
+    public Year getYear() {
+        return Year.of(1772);
+    }
+    
+    @Override
+    public String getAuthor() {
+        return "Johann Heinrich Lambert (1728Ð1777)";
+    }
+}

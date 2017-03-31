@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package ch.ethz.karto.gui;
 
 import com.jhlabs.map.MapMath;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 
 /**
  * Projects open lines.
+ *
  * @author Bernhard Jenny, Institute of Cartography, ETH Zurich.
  */
 public class LineProjector {
@@ -49,8 +49,10 @@ public class LineProjector {
     /**
      * Project the end point of a straight line segment.
      *
-     * @param lonEnd The x coordinate of the end point of the straight line segment.
-     * @param latEnd The y coordinate of the end point of the straight line segment.
+     * @param lonEnd The x coordinate of the end point of the straight line
+     * segment.
+     * @param latEnd The y coordinate of the end point of the straight line
+     * segment.
      * @param lonStart The x coordinate of the start point of the straight line
      * segment. This is only used when the line segment intersects the bounding
      * meridian of graticule to compute the intersection point.
@@ -72,7 +74,7 @@ public class LineProjector {
 
         if (prevPointOutOfRange != pointOutOfRange) {
             prevPointOutOfRange = pointOutOfRange;
-            projPath = projectIntersectingLineTo(lonEnd, latEnd, 
+            projPath = projectIntersectingLineTo(lonEnd, latEnd,
                     lonStart, latStart,
                     projPath, lines, projection);
         } else {
@@ -85,8 +87,9 @@ public class LineProjector {
     /**
      * Computes two intersection points for a straight line segment that crosses
      * the bounding meridian at +/-180 degrees from the central meridian.
-     * Projects and adds the two intersection points and the next end point to
-     * a path.
+     * Projects and adds the two intersection points and the next end point to a
+     * path.
+     *
      * @param lonEnd The longitude of the end point of the line segment.
      * @param latEnd The latitude of the end point of the line segment.
      * @param lonStart The longitude of the start point of the line segment.
@@ -110,7 +113,6 @@ public class LineProjector {
         // FIXME: intersections are not detected for projections that have not
         // a graticule covering 360 degrees in longitude
         // FIXME: intersections with min latitude and max latitude missing.
-
         final double lon1; // the longitude of the intermediate end point
         final double lon2; // the longitude of the intermediate start point
         final double lat; // the latitude of both intermediate points
@@ -136,7 +138,7 @@ public class LineProjector {
 
         // add line from start of line to intersection
         lineTo(lonStart, latStart, lon1, lat, projPath, projection);
-        
+
         // store the line and create a new one
         lines.add(projPath);
         projPath = new MapLine();
@@ -170,7 +172,7 @@ public class LineProjector {
 
     }
 
-    private  void straightLineTo(double lonEnd, double latEnd,
+    private void straightLineTo(double lonEnd, double latEnd,
             MapLine projPath,
             Projection projection) {
 
@@ -235,6 +237,7 @@ public class LineProjector {
     /**
      * Square distance between a point and a line defined by two other points.
      * See http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
+     *
      * @param x0 The point not on the line.
      * @param y0 The point not on the line.
      * @param x1 A point on the line.
@@ -250,14 +253,15 @@ public class LineProjector {
         final double x2_x1 = x2 - x1;
         final double y2_y1 = y2 - y1;
 
-        final double d = (x2_x1)*(y1-y0) - (x1-x0)*(y2_y1);
-        final double denominator = x2_x1*x2_x1 + y2_y1*y2_y1;
+        final double d = (x2_x1) * (y1 - y0) - (x1 - x0) * (y2_y1);
+        final double denominator = x2_x1 * x2_x1 + y2_y1 * y2_y1;
         return d * d / denominator;
     }
 
     /**
      * Square distance between a point and a line defined by two other points.
      * See http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
+     *
      * @param p0 The point not on the line.
      * @param p1 A point on the line.
      * @param p2 Another point on the line.
@@ -352,6 +356,7 @@ public class LineProjector {
 
     /**
      * Projects a vector of lines.
+     *
      * @param lines The lines to project.
      * @return A vector with the projected lines.
      */
@@ -360,39 +365,40 @@ public class LineProjector {
         if (src == null || dst == null) {
             return;
         }
+        
+        this.addIntermediatePointsAlongCurves = false;
 
         // loop over all lines to project
         int nbrLines = src.size();
         for (int lineID = 0; lineID < nbrLines; lineID++) {
-            MapLine line = (MapLine)src.get(lineID);
+            MapLine line = (MapLine) src.get(lineID);
             project(line, projection, dst);
         }
 
     }
 
     /**
-     * Construct a graticule (a projected regularly spaced grid). The graticule
-     * is projected.
+     * Construct a graticule (a grid of regularly spaced longitude and latitude
+     * lines). The graticule is projected.
      */
     public void constructGraticule(ArrayList<MapLine> projectedLines, Projection projection) {
 
         this.addIntermediatePointsAlongCurves = true;
-        
+
         final double minLon = projection.getMinLongitudeDegrees();
         final double maxLon = projection.getMaxLongitudeDegrees();
         final double minLat = projection.getMinLatitudeDegrees();
         final double maxLat = projection.getMaxLatitudeDegrees();
 
-        
-        projection = (Projection)projection.clone();
-        
-        final int linesPerHemisphere = (int)(180/graticuleDensity);
+        projection = (Projection) projection.clone();
+
+        final int linesPerHemisphere = (int) (180 / graticuleDensity);
 
         // vertical meridian lines
         for (int i = -linesPerHemisphere; i <= linesPerHemisphere; i++) {
-            final double x = i * graticuleDensity;
-            MapLine geoPath = new MapLine();
-            geoPath.addPoint(x, maxLat);
+            final double lon = i * graticuleDensity;
+            MapLine line = new MapLine();
+            line.addPoint(lon, maxLat);
             // Add an intermediat point at the equator. Othewrwise the projected
             // graticule will be a wrong straight line for pseudocylindrical
             // projections that have a pole line with the same length as the
@@ -400,27 +406,27 @@ public class LineProjector {
             // by the LineProjector. It tests the middle point for each line
             // segment. If its distance from the line connecting the start and
             // the end line is large enough, an intermediate point is recursevly
-            // added. Problems aris when this intermediate point is on this line,
+            // added. Problems arise when this intermediate point is on this line,
             // as in the case above.
             if (!projection.isRectilinear()) {
-                geoPath.addPoint( x, 0);
+                line.addPoint(lon, 0);
             }
-            geoPath.addPoint(x, minLat);
+            line.addPoint(lon, minLat);
 
-            project(geoPath, projection, projectedLines);
+            project(line, projection, projectedLines);
         }
 
         // horizontal parallels
         projection.setProjectionLongitudeDegrees(0);
-        for (int j = -linesPerHemisphere/2; j <= linesPerHemisphere/2; j++) {
-            MapLine geoPath = new MapLine();
-            final double y = j * graticuleDensity;
-            if (y > maxLat || y < minLat) {
+        for (int j = -linesPerHemisphere / 2; j <= linesPerHemisphere / 2; j++) {
+            MapLine line = new MapLine();
+            final double lat = j * graticuleDensity;
+            if (lat > maxLat || lat < minLat) {
                 continue;
             }
-            geoPath.addPoint(minLon, (float)y);
-            geoPath.addPoint(maxLon, (float)y);
-            project(geoPath, projection, projectedLines);
+            line.addPoint(minLon, (float) lat);
+            line.addPoint(maxLon, (float) lat);
+            project(line, projection, projectedLines);
         }
     }
 
@@ -432,8 +438,8 @@ public class LineProjector {
             ArrayList<MapLine> projectedLines) {
 
         this.addIntermediatePointsAlongCurves = true;
-        
-        projection = (Projection)projection.clone();
+
+        projection = (Projection) projection.clone();
         projection.setProjectionLongitudeDegrees(0);
         projection.initialize();
 

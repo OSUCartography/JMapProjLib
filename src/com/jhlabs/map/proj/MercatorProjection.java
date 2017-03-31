@@ -25,6 +25,7 @@ package com.jhlabs.map.proj;
 
 import com.jhlabs.map.MapMath;
 import java.awt.geom.Point2D;
+import java.time.Year;
 
 public class MercatorProjection extends CylindricalProjection {
 
@@ -77,5 +78,15 @@ public class MercatorProjection extends CylindricalProjection {
 
     public String toString() {
         return "Mercator";
+    }
+    
+    @Override
+    public Year getYear() {
+        return Year.of(1569);
+    }
+    
+    @Override
+    public String getAuthor() {
+        return "Gerardus Mercator (1512-94)";
     }
 }

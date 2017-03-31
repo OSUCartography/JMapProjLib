@@ -16,10 +16,13 @@ limitations under the License.
 package com.jhlabs.map.proj;
 
 import java.awt.geom.Point2D;
+import java.time.Year;
 
 /**
- * Apian I Globular projection.
- * Code from proj4.
+ * Apian I Globular projection. Code from proj4. Not a pseudocylindric
+ * projection, because meridians are only regularly distributed along the
+ * equator.
+ *
  * @author Bernhard Jenny, Institute of Cartography, ETH Zurich
  */
 public class Apian1Projection extends Projection {
@@ -30,6 +33,7 @@ public class Apian1Projection extends Projection {
     public Apian1Projection() {
     }
 
+    @Override
     public Point2D.Double project(double lplam, double lpphi, Point2D.Double out) {
 
         double ax = Math.abs(lplam);
@@ -57,7 +61,23 @@ public class Apian1Projection extends Projection {
         return true;
     }
 
+    @Override
     public String toString() {
         return "Apian Globular I";
+    }
+
+    @Override
+    public Year getYear() {
+        return Year.of(1524);
+    }
+
+    @Override
+    public String getAuthor() {
+        return "Peter Apian (Peter Bienewitz) (1495Ð1552)";
+    }
+    
+    @Override
+    public String getDescription() {
+        return super.getDescription() + " Meridians are arcs of circles.";
     }
 }

@@ -159,12 +159,12 @@ public class MapLine {
         }
         
         // add first point
-        path.moveTo((float)points.get(0).x, points.get(0).y);
+        path.moveTo(points.get(0).x, points.get(0).y);
         
         // add all following points
         for (int pointID = 1; pointID < nbrPoints; pointID++) {
             MapPoint p = points.get(pointID);
-            path.lineTo((float)p.x, (float)p.y);
+            path.lineTo(p.x, p.y);
         }
         
         return path;
