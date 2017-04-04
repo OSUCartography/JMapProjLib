@@ -76,7 +76,7 @@ public class BaconProjection extends Projection {
     
     @Override
     public String getAuthor() {
-        return "Roger Bacon (1214Ð1294)";
+        return "Roger Bacon (1214-1294)";
     }
     
     @Override

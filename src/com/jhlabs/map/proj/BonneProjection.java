@@ -161,6 +161,6 @@ public class BonneProjection extends ConicProjection {
                 + " 1511 and Honter in 1561. Accurate use by De l'Isle before "
                 + "1700, Coronelli in 1696. Named after Rigobert Bonne (1727-1795). "
                 + "The Werner projection was invented by Johannes Stabius "
-                + "around 1500 and promoted by Johannes Werner (1466Ð1528).";
+                + "around 1500 and promoted by Johannes Werner (1466-1528).";
     }
 }

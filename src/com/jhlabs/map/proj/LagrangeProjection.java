@@ -97,6 +97,6 @@ public class LagrangeProjection extends Projection {
     
     @Override
     public String getAuthor() {
-        return "Johann Heinrich Lambert (1728Ð1777) and Joseph Louis Lagrange (1736Ð1813)";
+        return "Johann Heinrich Lambert (1728-1777) and Joseph Louis Lagrange (1736-1813)";
     }
 }

@@ -134,12 +134,12 @@ public class CassiniProjection extends CylindricalProjection {
     
     @Override
     public String getAuthor() {
-        return "César François Cassini de Thury (1714-1784)";
+        return "C√©sar Fran√ßois Cassini de Thury (1714-1784)";
     }
     
     @Override
     public String getDescription() {
-        return super.getDescription() + "\nTransverse aspect of Plate Carrée.";
+        return super.getDescription() + "\nTransverse aspect of Plate Carr√©e.";
     }
     
 }

@@ -150,7 +150,7 @@ public class LambertConformalConicProjection extends ConicProjection {
     
     @Override
     public String getAuthor() {
-        return "Johann Heinrich Lambert (1728Ð1777)";
+        return "Johann Heinrich Lambert (1728-1777)";
     }
 
 }
