@@ -13,12 +13,23 @@ import java.awt.geom.Point2D;
  */
 public class TransformedLambertAzimuthalTransverse extends Projection {
 
-    // FIXME missing documentation for fields
-    private double lat0;
+    /**
+     * standard parallel for transverse equal-area cylindrical
+     */
+    private double lat0 = 0;
+    
     private double m;
     private double n;
-    private double CA;
-    private double CB;
+    
+    /**
+     * scale factor for longitude
+     */
+    private double C_LON;
+    
+    /**
+     * scale factor for latitude
+     */
+    private double C_LAT;
 
     public TransformedLambertAzimuthalTransverse() {
         setW(0.5);
@@ -34,35 +45,42 @@ public class TransformedLambertAzimuthalTransverse extends Projection {
         if (w < 0 || w > 1) {
             throw new IllegalArgumentException("Weight must be between 0 and 1");
         }
-        lat0 = 0;// FIXME
 
-        double lam1, phi1, p, k, d, pCyl, w_;
+        // bounding meridians and bounding parallels for Wagner transformation
+        // linear mapping of w to bounding meridian and parallels would be 
+        // lonBound = w * Math.PI;
+        // latBound = w * Math.PI / 2;
+        // A non-linear mapping results in a visually more continous transition.
+        double w_ = 1 - Math.cos(Math.PI / 2 * w);
+        double lonBound = Math.atan(w) * 4;
+        double latBound = w_ * Math.PI / 2;
+        
+        // equator/central meridian ratio for the equal-area cylindrical with 
+        // standard parallel lat0
+        double cosLat0 = Math.cos(lat0);
+        double pCyl = Math.PI * cosLat0 * cosLat0;
+        
+        // equator/central meridian ratio for the Lambert azimuthal
+        double pAzi = Math.sqrt(2);
+        
+        // equator/central meridian ratio by linear blending of the two ratios
+        double p = pCyl + (pAzi - pCyl) * w_;
 
-//        linear blending
-//        lam1 = w * Math.PI;
-//        phi1 = w * Math.PI / 2;
-//
-//        // convert standard parallel to aspect ratio p
-//        pCyl = Math.PI * Math.cos(lat0) * Math.cos(lat0);
-//        p = pCyl + (1.4142135623730950488016887242097 - pCyl) * w;
-        // non-linear blending
-        w_ = 1 - Math.cos(Math.PI / 2 * w);
-        phi1 = w_ * Math.PI / 2;
-        lam1 = Math.atan(w) * 4;
+        // FIXME
+        lonBound = Math.max(lonBound, 0.0000001);
+        latBound = Math.max(latBound, 0.0000001);
 
-        // convert standard parallel to aspect ratio p
-        pCyl = Math.PI * Math.cos(lat0) * Math.cos(lat0);
-        p = pCyl + (Math.sqrt(2) - pCyl) * w_;
-
-        lam1 = Math.max(lam1, 0.0000001);
-        phi1 = Math.max(phi1, 0.0000001);
-
-        m = Math.sin(phi1);
-        n = lam1 / Math.PI;
-        k = Math.sqrt(p * Math.sin(phi1 / 2) / Math.sin(lam1 / 2));
-        d = Math.sqrt(m * n);
-        CA = k / d;
-        CB = 1 / (k * d);
+        //
+        m = Math.sin(latBound);
+        n = lonBound / Math.PI;
+        
+        // k: stretching factor to adjust the equator/central meridian ratio 
+        double k = Math.sqrt(p * Math.sin(latBound / 2) / Math.sin(lonBound / 2));
+        
+        // scale factors for longitude and latitude
+        double d = Math.sqrt(m * n);
+        C_LON = k / d;
+        C_LAT = 1 / (k * d);
     }
 
     @Override
@@ -79,14 +97,15 @@ public class TransformedLambertAzimuthalTransverse extends Projection {
         // Synder 1987 Map Projections - A working manual, eq. 5-9 with alpha = 0
         sinLat = -cosLat * cosLon;
 
-        // transformed Lambert azimuthal
+        // Wagner transformation applied to Lambert azimuthal
         lam *= n;
         sin_O = m * sinLat;
         cos_O = Math.sqrt(1 - sin_O * sin_O);
         d = Math.sqrt(2 / (1 + cos_O * Math.cos(lam)));
+        
         // invert x and y and flip y coordinate
-        xy.y = -CA * d * cos_O * Math.sin(lam);
-        xy.x = CB * d * sin_O;
+        xy.y = -C_LON * d * cos_O * Math.sin(lam);
+        xy.x = C_LAT * d * sin_O;
 
         return xy;
     }
