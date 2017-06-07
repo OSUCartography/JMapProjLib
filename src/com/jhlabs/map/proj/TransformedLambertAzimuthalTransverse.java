@@ -13,23 +13,40 @@ import java.awt.geom.Point2D;
  */
 public class TransformedLambertAzimuthalTransverse extends Projection {
 
+    public static void main(String[] args) {
+        TransformedLambertAzimuthalTransverse proj = new TransformedLambertAzimuthalTransverse();
+        proj.setW(0.25);
+        proj.setEllipsoid(com.jhlabs.map.Ellipsoid.SPHERE);
+        proj.initialize();
+        Point2D.Double pt = new Point2D.Double();
+        double lon = -125;
+        double lat = -33;
+        proj.transform(lon, lat, pt);
+        proj.inverseTransform(pt, pt);
+        System.out.println(pt.x + " " + pt.y);
+    }
+
     /**
-     * standard parallel for transverse equal-area cylindrical
+     * standard parallel for transverse equal-area cylindrical in radians
      */
     private double lat0 = 0;
     
+    /**
+     * latitude of the central point in radians
+     */
+    private double centralLat = Math.PI / 4;
+
+    /**
+     * Wagner transformation parameters m and n
+     */
     private double m;
     private double n;
+    private double sqrt_mn; // sqrt(m * n)
     
     /**
-     * scale factor for longitude
+     * stretching factor to adjust the equator/central meridian ratio 
      */
-    private double C_LON;
-    
-    /**
-     * scale factor for latitude
-     */
-    private double C_LAT;
+    private double k;
 
     public TransformedLambertAzimuthalTransverse() {
         setW(0.5);
@@ -42,77 +59,106 @@ public class TransformedLambertAzimuthalTransverse extends Projection {
      * @param w 0: transverse cylindrical. 1: Lambert azimuthal.
      */
     final public void setW(double w) {
+        setW(w, true);
+    }
+
+    /**
+     * Weight for transformation between Lambert azimuthal and transverse
+     * equal-area cylindrical.
+     *
+     * @param w 0: transverse cylindrical. 1: Lambert azimuthal
+     * @param visuallyContinuous if true, w is mapped non-linearly to bounding
+     * meridians and parallels for the Wagner transformation, which results in a
+     * visually more continuous transformation.
+     */
+    final public void setW(double w, boolean visuallyContinuous) {
         if (w < 0 || w > 1) {
             throw new IllegalArgumentException("Weight must be between 0 and 1");
         }
 
         // bounding meridians and bounding parallels for Wagner transformation
-        // linear mapping of w to bounding meridian and parallels would be 
-        // lonBound = w * Math.PI;
-        // latBound = w * Math.PI / 2;
-        // A non-linear mapping results in a visually more continous transition.
-        double w_ = 1 - Math.cos(Math.PI / 2 * w);
-        double lonBound = Math.atan(w) * 4;
-        double latBound = w_ * Math.PI / 2;
-        
+        double lonBound, latBound;
+
+        // compute bounding meridians and bounding parallels from weight w
+        if (visuallyContinuous) {
+            // non-linear mapping of w to bounding meridians and parallels 
+            // results in a visually more continous transition
+            w = 1 - Math.cos(Math.PI / 2 * w);
+            lonBound = Math.atan(w) * 4;
+            latBound = w * Math.PI / 2;
+        } else {
+            // linear mapping of w to bounding meridians and parallels
+            lonBound = w * Math.PI;
+            latBound = w * Math.PI / 2;
+        }
+
         // equator/central meridian ratio for the equal-area cylindrical with 
         // standard parallel lat0
         double cosLat0 = Math.cos(lat0);
         double pCyl = Math.PI * cosLat0 * cosLat0;
-        
+
         // equator/central meridian ratio for the Lambert azimuthal
         double pAzi = Math.sqrt(2);
-        
+
         // equator/central meridian ratio by linear blending of the two ratios
-        double p = pCyl + (pAzi - pCyl) * w_;
+        double p = pCyl + (pAzi - pCyl) * w;
 
         // FIXME
         lonBound = Math.max(lonBound, 0.0000001);
         latBound = Math.max(latBound, 0.0000001);
 
-        //
+        // Wagner transformation parameters
         m = Math.sin(latBound);
         n = lonBound / Math.PI;
-        
+        sqrt_mn = Math.sqrt(m * n);
+
         // k: stretching factor to adjust the equator/central meridian ratio 
-        double k = Math.sqrt(p * Math.sin(latBound / 2) / Math.sin(lonBound / 2));
-        
-        // scale factors for longitude and latitude
-        double d = Math.sqrt(m * n);
-        C_LON = k / d;
-        C_LAT = 1 / (k * d);
+        k = Math.sqrt(p * Math.sin(latBound / 2) / Math.sin(lonBound / 2));
     }
 
     @Override
-    public Point2D.Double project(double lam, double phi, Point2D.Double xy) {
-
-        double sin_O, cos_O, d, cosLon, cosLat, sinLat;
+    public Point2D.Double project(double lon, double lat, Point2D.Double xy) {
 
         // transverse rotation
-        lam += Math.PI / 2;
-        cosLon = Math.cos(lam);
-        cosLat = Math.cos(phi);
+        double cosLat = Math.cos(lat);
+        double sinLat = Math.sin(lat);
+        double cosLon = Math.cos(lon);
+        double sinLon = Math.sin(lon);
         // Synder 1987 Map Projections - A working manual, eq. 5-10b with alpha = 0
-        lam = Math.atan2(cosLat * Math.sin(lam), Math.sin(phi));
+        double lon_ = Math.atan2(-sinLat, cosLat * cosLon) + centralLat;
         // Synder 1987 Map Projections - A working manual, eq. 5-9 with alpha = 0
-        sinLat = -cosLat * cosLon;
+        double sinLat_ = cosLat * sinLon;
 
         // Wagner transformation applied to Lambert azimuthal
-        lam *= n;
-        sin_O = m * sinLat;
-        cos_O = Math.sqrt(1 - sin_O * sin_O);
-        d = Math.sqrt(2 / (1 + cos_O * Math.cos(lam)));
-        
+        lon_ *= n;
+        double sin_O = m * sinLat_;
+        double cos_O = Math.sqrt(1 - sin_O * sin_O);
+        double d = Math.sqrt(2 / (1 + cos_O * Math.cos(lon_)));
+
         // invert x and y and flip y coordinate
-        xy.y = -C_LON * d * cos_O * Math.sin(lam);
-        xy.x = C_LAT * d * sin_O;
+        xy.x = d * sin_O / (k * sqrt_mn);
+        xy.y = -k / sqrt_mn * d * cos_O * Math.sin(lon_);
 
         return xy;
     }
 
     @Override
+    public Point2D.Double projectInverse(double x, double y, Point2D.Double out) {
+        double X = x * k * sqrt_mn;
+        double Y = -y * sqrt_mn / k;
+        double Z = Math.sqrt(1 - (X * X + Y * Y) / 4);
+        double lon_ = Math.atan2(Z * Y, 2 * Z * Z - 1) / n;
+        double sinLat_ = Z * X / m;
+        double lat_ = Math.asin(sinLat_);
+        double cosLat_ = Math.cos(lat_);
+        out.x = Math.atan2(sinLat_, cosLat_ * Math.cos(lon_ - centralLat));
+        out.y = Math.asin(-cosLat_ * Math.sin(lon_ - centralLat));
+        return out;
+    }
+
+    @Override
     public boolean hasInverse() {
-        return false;
+        return true;
     }
 
     @Override

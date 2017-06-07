@@ -38,7 +38,7 @@ public class LambertAzimuthalEqualAreaProjection extends AzimuthalProjection {
     @Override
     public Point2D.Double projectInverse(double x, double y, Point2D.Double out) {
 
-        /* polar aspetc
+        /* polar aspect
         double rh = Math.sqrt(x * x + y * y);
         double phi = rh * .5;
         out.x = Math.atan2(x, -y);
