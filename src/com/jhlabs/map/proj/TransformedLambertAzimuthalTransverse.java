@@ -30,7 +30,7 @@ public class TransformedLambertAzimuthalTransverse extends Projection {
      * standard parallel for transverse equal-area cylindrical in radians
      */
     private double lat0 = 0;
-    
+
     /**
      * latitude of the central point in radians
      */
@@ -42,14 +42,14 @@ public class TransformedLambertAzimuthalTransverse extends Projection {
     private double m;
     private double n;
     private double sqrt_mn; // sqrt(m * n)
-    
+
     /**
-     * stretching factor to adjust the equator/central meridian ratio 
+     * stretching factor to adjust the equator/central meridian ratio
      */
     private double k;
 
     public TransformedLambertAzimuthalTransverse() {
-        setW(0.5);
+        setW(0.75);
     }
 
     /**
@@ -83,14 +83,13 @@ public class TransformedLambertAzimuthalTransverse extends Projection {
         if (visuallyContinuous) {
             // non-linear mapping of w to bounding meridians and parallels 
             // results in a visually more continous transition
-            w = 1 - Math.cos(Math.PI / 2 * w);
             lonBound = Math.atan(w) * 4;
-            latBound = w * Math.PI / 2;
+            w = 1 - Math.cos(Math.PI / 2 * w);
         } else {
             // linear mapping of w to bounding meridians and parallels
             lonBound = w * Math.PI;
-            latBound = w * Math.PI / 2;
         }
+        latBound = w * Math.PI / 2;
 
         // equator/central meridian ratio for the equal-area cylindrical with 
         // standard parallel lat0
@@ -128,6 +127,12 @@ public class TransformedLambertAzimuthalTransverse extends Projection {
         double lon_ = Math.atan2(-sinLat, cosLat * cosLon) + centralLat;
         // Synder 1987 Map Projections - A working manual, eq. 5-9 with alpha = 0
         double sinLat_ = cosLat * sinLon;
+
+        // adjusting longitude value before applying Wagner transformation
+        // rotated longitude must be in the range +/- PI
+        if (Math.abs(lon_) > Math.PI) {
+            lon_ += (lon_ < 0.0) ? Math.PI * 2 : -Math.PI * 2;
+        }
 
         // Wagner transformation applied to Lambert azimuthal
         lon_ *= n;
