@@ -16,6 +16,7 @@ public class TransformedLambertAzimuthalTransverse extends Projection {
     public static void main(String[] args) {
         TransformedLambertAzimuthalTransverse proj = new TransformedLambertAzimuthalTransverse();
         proj.setW(0.25);
+        proj.setCentralLatitude(Math.PI / 4);
         proj.setEllipsoid(com.jhlabs.map.Ellipsoid.SPHERE);
         proj.initialize();
         Point2D.Double pt = new Point2D.Double();
@@ -27,14 +28,17 @@ public class TransformedLambertAzimuthalTransverse extends Projection {
     }
 
     /**
-     * standard parallel for transverse equal-area cylindrical in radians
+     * Standard parallel for equal-area cylindrical with equatorial aspect in
+     * radians. Transverse cylindrical projections commonly use a scale factor k
+     * smaller than 1 instead of a standard parallel. There are currently no
+     * setter and getter for lat0.
      */
-    private double lat0 = 0;
+    private final double lat0 = 0;
 
     /**
      * latitude of the central point in radians
      */
-    private double centralLat = Math.PI / 4;
+    private double centralLat = 0;
 
     /**
      * Wagner transformation parameters m and n
@@ -179,5 +183,24 @@ public class TransformedLambertAzimuthalTransverse extends Projection {
     @Override
     public String getDescription() {
         return super.getDescription() + " Transition for portrait-format maps using adaptive composite map projections.";
+    }
+
+    /**
+     * Get latitude of central point.
+     *
+     * @return central latitude in radians
+     */
+    public double getCentralLatitude() {
+        return centralLat;
+    }
+
+    /**
+     * Set latitude of central point.
+     *
+     * @param centralLat central latitude in radians
+     */
+    public void setCentralLatitude(double centralLat) {
+        assert (centralLat >= -Math.PI / 2 && centralLat <= Math.PI / 2);
+        this.centralLat = centralLat;
     }
 }
