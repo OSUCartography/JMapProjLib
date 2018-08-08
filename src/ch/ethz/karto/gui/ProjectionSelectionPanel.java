@@ -108,6 +108,11 @@ public class ProjectionSelectionPanel extends javax.swing.JPanel {
             descriptionLabel.setText("-");
         } else {
             descriptionLabel.setText(projection.getDescription());
+            if (projection.hasInverse()) {
+                System.out.println("Found inverse equation for " + projection.getName() + ".");
+            } else {
+                System.out.println("No inverse equation for " + projection.getName() + ".");
+            }
         }
     }
 
