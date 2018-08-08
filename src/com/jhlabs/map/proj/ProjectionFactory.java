@@ -372,6 +372,7 @@ public class ProjectionFactory {
             register("eck5", Eckert5Projection.class);
             register("eck6", Eckert6Projection.class);
             register("eckgreif", EckertGreifendorffProjection.class);
+            register("equalearth", EqualEarthProjection.class);
             register("eqc", EquidistantCylindricalProjection.class);
             register("eqdc", EquidistantConicProjection.class);
             register("euler", EulerProjection.class);
@@ -452,6 +453,7 @@ public class ProjectionFactory {
             register("tcc", TCCProjection.class);
             register("tcea", TCEAProjection.class);
             register("tissot", TissotProjection.class);
+            register("toblermercator", ToblerMercator.class);
             register("tmerc", TransverseMercatorProjection.class);
             register("tlat", TransformedLambertAzimuthalTransverse.class);
             
