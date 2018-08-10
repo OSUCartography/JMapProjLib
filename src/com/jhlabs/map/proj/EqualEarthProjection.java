@@ -18,7 +18,7 @@
  * was designed in 2018 by Bojan Savric, Tom Patterson and Bernhard Jenny.
  *
  * Publication:
- * Bojan ?avri?, Tom Patterson & Bernhard Jenny (2018). The Equal Earth map
+ * Bojan Savric, Tom Patterson & Bernhard Jenny (2018). The Equal Earth map
  * projection, International Journal of Geographical Information Science,
  * DOI: 10.1080/13658816.2018.1504949
  *
@@ -55,7 +55,7 @@ public class EqualEarthProjection extends PseudoCylindricalProjection {
     @Override
     public Point2D.Double projectInverse(double x, double y, Point2D.Double lonLat) {
         final double EPS = 1.0e-9;
-        final int NITER = 12;
+        final int NITER = 10;
         
         double paramLat = y, paramLatSq, paramLatPow6, fy, fpy, dlat;
         int i;
@@ -64,8 +64,7 @@ public class EqualEarthProjection extends PseudoCylindricalProjection {
             paramLatPow6 = paramLatSq * paramLatSq * paramLatSq;
 
             fy = paramLat * (A1 + A2 * paramLatSq + paramLatPow6 * (A3 + A4 * paramLatSq)) - y;
-            fpy = A1 + A2 * paramLatSq + paramLatPow6 * (A3 + A4 * paramLatSq);
-
+            fpy = A1 + 3 * A2 * paramLatSq + paramLatPow6 * (7 * A3 + 9 * A4 * paramLatSq);
             paramLat -= dlat = fy / fpy;
             if (Math.abs(dlat) < EPS) {
                 break;
