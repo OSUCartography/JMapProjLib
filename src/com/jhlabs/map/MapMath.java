@@ -204,18 +204,16 @@ public class MapMath {
         return angle;
     }
 
-    /*
-    public static void latLongToXYZ(Point2D.Double ll, Point3D xyz) {
-    double c = Math.cos(ll.y);
-    xyz.x = c * Math.cos(ll.x);
-    xyz.y = c * Math.sin(ll.x);
-    xyz.z = Math.sin(ll.y);
-    }
-    
-    public static void xyzToLatLong(Point3D xyz, Point2D.Double ll) {
-    ll.y = MapMath.asin(xyz.z);
-    ll.x = MapMath.atan2(xyz.y, xyz.x);
-    }
+    /**
+     * Great circle distance between two points computed with haversine formula
+     * 
+     * https://en.wikipedia.org/wiki/Great-circle_distance#Computational_formulas
+     * 
+     * @param lon1 longitude of point 1
+     * @param lat1 latitude of point 1
+     * @param lon2 longitude of point 2
+     * @param lat2 latitude of point 2
+     * @return great circle distance for sphere with radius = 1
      */
     public static double greatCircleDistance(double lon1, double lat1, double lon2, double lat2) {
         double dlat = Math.sin((lat2 - lat1) / 2);
