@@ -163,6 +163,7 @@ public class MapMath {
 
     /**
      * normalize longitude angle in radians
+     *
      * @param angle
      * @return
      */
@@ -188,7 +189,6 @@ public class MapMath {
             angle += TWOPI;
         }
         return angle;
-//		return Math.IEEEremainder(angle, Math.PI);
     }
 
     public static double normalizeAngle(double angle) {
@@ -206,13 +206,13 @@ public class MapMath {
 
     /**
      * Great circle distance between two points computed with haversine formula
-     * 
+     *
      * https://en.wikipedia.org/wiki/Great-circle_distance#Computational_formulas
-     * 
-     * @param lon1 longitude of point 1
-     * @param lat1 latitude of point 1
-     * @param lon2 longitude of point 2
-     * @param lat2 latitude of point 2
+     *
+     * @param lon1 longitude of point 1 in radians
+     * @param lat1 latitude of point 1 in radians
+     * @param lon2 longitude of point 2 in radians
+     * @param lat2 latitude of point 2 in radians
      * @return great circle distance for sphere with radius = 1
      */
     public static double greatCircleDistance(double lon1, double lat1, double lon2, double lat2) {
@@ -222,14 +222,26 @@ public class MapMath {
         return 2.0 * Math.asin(r);
     }
 
-    public static double sphericalAzimuth(double lat0, double lon0, double lat, double lon) {
-        double diff = lon - lon0;
-        double coslat = Math.cos(lat);
-
-        return Math.atan2(
-                coslat * Math.sin(diff),
-                (Math.cos(lat0) * Math.sin(lat)
-                - Math.sin(lat0) * coslat * Math.cos(diff)));
+    /**
+     * Spherical azimuth for great circle passing through points P1 and P2 at
+     * point P1.
+     *
+     * @param lon1 longitude of point P1 in radians
+     * @param lat1 latitude of point P1 in radians
+     * @param lon2 longitude of point P2 in radians
+     * @param lat2 latitude of point P2 in radians
+     * @return spherical azimuth at point P1 in radians
+     */
+    public static double sphericalAzimuths(double lon1, double lat1, double lon2, double lat2) {
+        double dLon = lon2 - lon1;
+        double cosDLon = Math.cos(dLon);
+        double sinDLon = Math.sin(dLon);
+        double cosLat1 = Math.cos(lat1);
+        double sinLat1 = Math.sin(lat1);
+        double cosLat2 = Math.cos(lat2);
+        double sinLat2 = Math.sin(lat2);
+        return Math.atan2(cosLat2 * sinDLon, 
+                cosLat1 * sinLat2 - sinLat1 * cosLat2 * cosDLon);
     }
 
     public static boolean sameSigns(double a, double b) {
@@ -472,12 +484,12 @@ public class MapMath {
      * from "Graphics Gems", Academic Press, 1990
      */
     public static double niceNumber(double x, boolean round) {
-        int expv;				/* exponent of x */
-        double f;				/* fractional part of x */
-        double nf;				/* nice, rounded fraction */
+        int expv; // exponent of x
+        double f; // fractional part of x
+        double nf; // nice, rounded fraction
 
         expv = (int) Math.floor(Math.log(x) / Math.log(10));
-        f = x / Math.pow(10., expv);		/* between 1 and 10 */
+        f = x / Math.pow(10., expv); // between 1 and 10
         if (round) {
             if (f < 1.5) {
                 nf = 1.;
@@ -501,7 +513,7 @@ public class MapMath {
     }
 
     /* evaluate complex polynomial */
-    /* note: coefficients are always from C_1 to C_n
+ /* note: coefficients are always from C_1 to C_n
      **	i.e. C_0 == (0., 0)
      **	n should always be >= 1 though no checks are made
      *
@@ -557,7 +569,7 @@ public class MapMath {
         der[1] = b[1];
         return a;
     }
-    
+
     public static double aasin(double v) {
         final double ONE_TOL = 1.00000000000001;
         double av = Math.abs(v);
@@ -592,6 +604,7 @@ public class MapMath {
 
     /**
      * Transform the pole from its standard position at lat = 90deg to poleLat.
+     *
      * @param poleLat The latitude of the transformed pole.
      * @param lonlat The point to transform.
      */
@@ -608,6 +621,5 @@ public class MapMath {
         lonlat.x = MapMath.adjlon(MapMath.atan2(cosLat * sinLon, sinLatPole * cosLat_x_cosLon + cosLatPole * sinLat));
         sinLat = sinLatPole * sinLat - cosLatPole * cosLat_x_cosLon;
         lonlat.y = aasin(sinLat);
-
     }
 }
