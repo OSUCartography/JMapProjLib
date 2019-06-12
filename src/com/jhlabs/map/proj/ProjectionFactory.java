@@ -13,9 +13,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
  */
-
 /**
-Changes:
+ * Changes:
  * Added private static Hashtable nameMap which maps between human-readable
  * projection names and proj4 names.
  * Changed ProjectionFactoryregister() to fill the new nameMap.
@@ -47,15 +46,20 @@ import java.util.logging.Logger;
 
 public class ProjectionFactory {
 
-    private final static double SIXTH = .1666666666666666667; /* 1/6 */
+    private final static double SIXTH = .1666666666666666667;
+    /* 1/6 */
 
-    private final static double RA4 = .04722222222222222222; /* 17/360 */
+    private final static double RA4 = .04722222222222222222;
+    /* 17/360 */
 
-    private final static double RA6 = .02215608465608465608; /* 67/3024 */
+    private final static double RA6 = .02215608465608465608;
+    /* 67/3024 */
 
-    private final static double RV4 = .06944444444444444444; /* 5/72 */
+    private final static double RV4 = .06944444444444444444;
+    /* 5/72 */
 
-    private final static double RV6 = .04243827160493827160; /* 55/1296 */
+    private final static double RV6 = .04243827160493827160;
+    /* 55/1296 */
 
     private static final AngleFormat format = new AngleFormat(AngleFormat.ddmmssPattern, true);
 
@@ -284,7 +288,6 @@ public class ProjectionFactory {
 //pm
         // FIXME !!!
         // projection.initialize();
-
         return projection;
     }
 
@@ -297,12 +300,12 @@ public class ProjectionFactory {
     private static void register(String proj4Name, Class cls) throws InstantiationException, IllegalAccessException {
         try {
             registry.put(proj4Name, cls);
-            Projection projection = (Projection) cls.newInstance();
+            Projection projection = (Projection) cls.getDeclaredConstructor().newInstance();
             String readableName = projection.getName();
             nameMap.put(readableName, proj4Name);
-        } catch (InstantiationException e) {
+        } catch (Exception e) {
             System.err.println("unable to register " + proj4Name);
-            throw e;
+            Logger.getLogger(ProjectionFactory.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
@@ -321,9 +324,10 @@ public class ProjectionFactory {
         Class cls = (Class) registry.get(name);
         if (cls != null) {
             try {
-                return (Projection) cls.newInstance();
-            } catch (IllegalAccessException | InstantiationException e) {
-                e.printStackTrace();
+                return (Projection) cls.getDeclaredConstructor().newInstance();
+            } catch (Exception e) {
+                System.err.println("unable to instantiate " + name);
+                Logger.getLogger(ProjectionFactory.class.getName()).log(Level.SEVERE, null, e);
             }
         }
         return null;
@@ -456,7 +460,7 @@ public class ProjectionFactory {
             register("toblermercator", ToblerMercator.class);
             register("tmerc", TransverseMercatorProjection.class);
             register("tlat", TransformedLambertAzimuthalTransverse.class);
-            
+
 //		register( "tpeqd", Projection.class, "Two Point Equidistant" );
 //		register( "tpers", Projection.class, "Tilted perspective" );
 //		register( "ups", Projection.class, "Universal Polar Stereographic" );
@@ -479,9 +483,7 @@ public class ProjectionFactory {
             register("wink1", Winkel1Projection.class);
             register("wink2", Winkel2Projection.class);
             register("wintri", WinkelTripelProjection.class);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(ProjectionFactory.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
+        } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(ProjectionFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -590,40 +592,4 @@ public class ProjectionFactory {
         return null;
     }
 
-    public static void main(String[] args) {
-        Projection projection = ProjectionFactory.fromPROJ4Specification(args);
-
-
-        if (projection != null) {
-            System.out.println(projection.getPROJ4Description());
-
-            for (int i = 0; i
-                    < args.length; i++) {
-                String arg = args[i];
-
-
-                if (!arg.startsWith("+") && !arg.startsWith("-")) {
-                    try {
-                        BufferedReader reader = new BufferedReader(new FileReader(new File(args[i])));
-                        Point2D.Double p = new Point2D.Double();
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            StringTokenizer t = new StringTokenizer(line, " ");
-                            String slon = t.nextToken();
-                            String slat = t.nextToken();
-                            p.x = format.parse(slon, null).doubleValue();
-                            p.y = format.parse(slat, null).doubleValue();
-                            projection.transform(p, p);
-                            System.out.println(p.x + " " + p.y);
-                        }
-                    } catch (IOException e) {
-                        System.out.println("IOException: " + args[i] + ": " + e.getMessage());
-                    }
-                }
-            }
-        } else {
-            System.out.println("Can't find projection " + args[0]);
-        }
-
-    }
 }
