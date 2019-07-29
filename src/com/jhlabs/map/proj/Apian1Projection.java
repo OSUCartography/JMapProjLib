@@ -73,7 +73,7 @@ public class Apian1Projection extends Projection {
 
     @Override
     public String getAuthor() {
-        return "Peter Apian (Peter Bienewitz) (1495Ð1552)";
+        return "Peter Apian (Peter Bienewitz) (1495-1552)";
     }
     
     @Override

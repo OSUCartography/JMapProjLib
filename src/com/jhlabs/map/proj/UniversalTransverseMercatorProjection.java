@@ -43,7 +43,7 @@ public class UniversalTransverseMercatorProjection extends TransverseMercatorPro
     }
 
     public int getZoneFromNearestMeridian(double longitude) {
-        
+
         // int zone = (int) (Math.floor(((180.0 + longitude) / 6)) + 1); FIXME
         int zone = (int) Math.floor((MapMath.normalizeLongitude(longitude) + Math.PI) * 30.0 / Math.PI) + 1;
         if (zone < 1) {
@@ -51,22 +51,22 @@ public class UniversalTransverseMercatorProjection extends TransverseMercatorPro
         } else if (zone > 60) {
             zone = 60;
         }
-        
+
         /*
         if( Lat >= 56.0 && Lat < 64.0 && LongTemp >= 3.0 && LongTemp < 12.0 )
             ZoneNumber = 32;
 
-		// Special zones for Svalbard
-    	if( Lat >= 72.0 && Lat < 84.0 ) 
-    	{
-    	  if(      LongTemp >= 0.0  && LongTemp <  9.0 ) ZoneNumber = 31;
-    	  else if( LongTemp >= 9.0  && LongTemp < 21.0 ) ZoneNumber = 33;
-    	  else if( LongTemp >= 21.0 && LongTemp < 33.0 ) ZoneNumber = 35;
-    	  else if( LongTemp >= 33.0 && LongTemp < 42.0 ) ZoneNumber = 37;
-    	 }
-    	 */
+        // Special zones for Svalbard
+        if( Lat >= 72.0 && Lat < 84.0 )
+        {
+            if(      LongTemp >= 0.0  && LongTemp <  9.0 ) ZoneNumber = 31;
+            else if( LongTemp >= 9.0  && LongTemp < 21.0 ) ZoneNumber = 33;
+            else if( LongTemp >= 21.0 && LongTemp < 33.0 ) ZoneNumber = 35;
+            else if( LongTemp >= 33.0 && LongTemp < 42.0 ) ZoneNumber = 37;
+        }
+        */
 
-        
+
         return zone;
     }
 

@@ -144,7 +144,7 @@ public class ProjectionSelectionPanel extends javax.swing.JPanel {
         selectionPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 10));
 
         projectionComboBox.setMaximumRowCount(40);
-        projectionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Plate Carrée (Geographic)", "Cylindrical Equal-Area", "Cylindrical Conformal (Mercator)", "Conical Equidistant", "Conical Equal-Area (Albers)", "Conical Conformal (Lambert)", "Azimuthal Equidistant", "Azimuthal Equal-Area (Lambert)", "Azimuthal Conformal (Stereographic)", "Azimuthal Orthographic", "Sinusoidal", "Pseudoconical Equal-Area (Bonne)" }));
+        projectionComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Plate Carr√©e (Geographic)", "Cylindrical Equal-Area", "Cylindrical Conformal (Mercator)", "Conical Equidistant", "Conical Equal-Area (Albers)", "Conical Conformal (Lambert)", "Azimuthal Equidistant", "Azimuthal Equal-Area (Lambert)", "Azimuthal Conformal (Stereographic)", "Azimuthal Orthographic", "Sinusoidal", "Pseudoconical Equal-Area (Bonne)" }));
         projectionComboBox.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 projectionComboBoxItemStateChanged(evt);
@@ -171,7 +171,7 @@ public class ProjectionSelectionPanel extends javax.swing.JPanel {
         selectionPanel.add(nextProjectionButton);
 
         inverseCheckBox.setText("Test Inverse");
-        inverseCheckBox.setToolTipText("Applies forward and inverse projection, which should result in a Plate Carrée projection.");
+        inverseCheckBox.setToolTipText("Applies forward and inverse projection, which should result in a Plate Carr√©e projection.");
         inverseCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inverseCheckBoxActionPerformed(evt);

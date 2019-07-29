@@ -202,6 +202,6 @@ public class TransverseMercatorProjection extends CylindricalProjection {
     
     @Override
     public String getAuthor() {
-        return "Johann Heinrich Lambert (1728Ð1777)";
+        return "Johann Heinrich Lambert (1728-1777)";
     }
 }

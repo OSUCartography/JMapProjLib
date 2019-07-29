@@ -19,8 +19,8 @@ import java.awt.geom.Point2D;
 
 /**
  * The Hufnagel projection family was introduced by Herbert Hufnagel in
- * "Hufnagel, H. 1989. Ein System unecht-zylindrischer Kartennetze fŸr
- * Erdkarten. Kartographische Nachrichten, 39(3), 89Ğ96." All projections are
+ * "Hufnagel, H. 1989. Ein System unecht-zylindrischer Kartennetze fÃ¼r
+ * Erdkarten. Kartographische Nachrichten, 39(3), 89-96." All projections are
  * equal-area. Implementation by Bernhard Jenny, Oregon State University, Bojan
  * Savric, Oregon State University, with substantial contributions by Daniel
  * "daan" Strebe, Mapthematics. November 2014 to October 2015.
@@ -115,7 +115,7 @@ public class HufnagelProjection extends PseudoCylindricalProjection {
             } else if (vAbs > table[imid]) {
                 imin = imid;
             } else {
-                // abs(phi) < latitudeTable[mid], or abs(phi) == latitudeTable[mid] and mid ­ 0
+                // abs(phi) < latitudeTable[mid], or abs(phi) == latitudeTable[mid] and mid Â­ 0
                 imax = imid;
             }
         }
